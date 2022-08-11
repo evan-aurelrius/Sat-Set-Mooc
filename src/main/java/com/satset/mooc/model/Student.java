@@ -36,19 +36,19 @@ public class Student implements User{
     @Column(name = "timestamp")
     private Timestamp created_at;
 
-    @Column(name = "token", unique = true)
-    private String token;
+//    @Column(name = "token", unique = true)
+//    private String token;
 
     @ManyToMany(mappedBy = "students")
     private List<Course> enrolledClass = new LinkedList<>();
 
-    public Student(String name, String gender, String image, String email, String password, String token) {
+    public Student(String name, String gender, String image, String email, String password) {
         this.name = name;
         this.gender = gender;
         this.image = image;
         this.email = email;
         this.password = password;
-        this.token = token;
+//        this.token = token;
     }
 
     public long getId() {
@@ -83,13 +83,13 @@ public class Student implements User{
         this.created_at = created_at;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
+//    public String getToken() {
+//        return token;
+//    }
+//
+//    public void setToken(String token) {
+//        this.token = token;
+//    }
 
     public List<Course> getEnrolledClass() {
         return enrolledClass;
