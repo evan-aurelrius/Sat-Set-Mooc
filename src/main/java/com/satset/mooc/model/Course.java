@@ -25,7 +25,7 @@ public class Course {
     private String description;
 
     @Column(name = "status")
-    private String status;
+    private String status = "Pending";
 
     @Column(name = "image")
     private String image;
@@ -60,7 +60,6 @@ public class Course {
         this.students = students;
         this.lectures = lectures;
         this.quizzes = quizzes;
-        this.status = "Pending";
     }
 
     public long getId() {
@@ -101,6 +100,18 @@ public class Course {
     public Timestamp updateTime() {
         this.updated_at = new Timestamp(System.currentTimeMillis());
         return this.updated_at;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setUpdated_at(Timestamp updated_at) {
+        this.updated_at = updated_at;
     }
 
     public Instructor getInstructor() {
