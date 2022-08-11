@@ -44,7 +44,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody SignupRequest request){
         System.out.println(request);
-        Student student = studentService.registerStudent(request.getName(), request.getEmail(), passwordEncoder.encode(request.getPassword()));
+        Student student = studentService.registerStudent(request.getName(), request.getGender(), request.getImage(), request.getEmail(), passwordEncoder.encode(request.getPassword()));
         return ResponseEntity.ok("test");
     }
 }
