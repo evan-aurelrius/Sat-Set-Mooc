@@ -2,11 +2,13 @@ package com.satset.mooc.model;
 
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.*;
 
 @Entity
 @NoArgsConstructor
-@Table(name="admin")
-public class Instructor {
+@Table(name="instructor")
+public class Instructor implements User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id", updatable = false)
@@ -15,16 +17,84 @@ public class Instructor {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "gender")
+    private String gender;
+
+    @Column(name = "image")
+    private String image;
+
     @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "password")
     private String password;
 
-    public Instructor(String name, String email, String password) {
+    @Column(name = "role")
+    private final String role = "instructor";
+
+    @Column(name = "verified_status")
+    private String verified_status = "Pending";
+
+    @Column(name = "timestamp")
+    private Timestamp created_at;
+
+    @Column(name = "token", unique = true)
+    private String token;
+
+    @OneToMany(mappedBy = "instructor")
+    private Set<Course> courseOwned = new LinkedHashSet<>();
+
+    public Instructor(String name, String gender, String image, String email, String password, String token) {
         this.name = name;
+        this.gender = gender;
+        this.image = image;
         this.email = email;
         this.password = password;
+        this.token = token;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Set<Course> getCourseOwned() {
+        return courseOwned;
+    }
+
+    public void setCourseOwned(Set<Course> courseOwned) {
+        this.courseOwned = courseOwned;
+    }
+
+    public void addCourseOwned(Course course) {
+        this.courseOwned.add(course);
     }
 
     public String getName() {
@@ -49,5 +119,25 @@ public class Instructor {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String printAllCourseName() {
+        String s = "";
+        for(Course c:courseOwned) {
+            s += c.getTitle() + " ";
+        }
+        return s;
+    }
+
+    public String getVerified_status() {
+        return verified_status;
+    }
+
+    public void setVerified_status(String verified_status) {
+        this.verified_status = verified_status;
+    }
+
+    public Timestamp getCreated_at() {
+        return created_at;
     }
 }

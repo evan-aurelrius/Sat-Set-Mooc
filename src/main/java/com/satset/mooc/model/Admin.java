@@ -7,7 +7,7 @@ import java.util.ArrayList;
 @Entity
 @NoArgsConstructor
 @Table(name="admin")
-public class Admin {
+public class Admin{
     @Id
     @Column(name="id", updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +22,17 @@ public class Admin {
     @Column(name = "password")
     private String password;
 
-    public Admin(String name, String email, String password) {
+    @Column(name = "role")
+    private final String role = "admin";
+
+    @Column(name = "token", unique = true)
+    private String token;
+
+    public Admin(String name, String email, String password, String token) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.token = token;
     }
 
     public Admin(AdminDto adminDto) {

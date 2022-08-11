@@ -1,4 +1,7 @@
 package com.satset.mooc.repository;
 
-public interface QuizRepository {
+import com.satset.mooc.model.Quiz;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface QuizRepository extends JpaRepository<Quiz, Long> {
 }
