@@ -17,11 +17,12 @@ public class AdminController {
     @Autowired
     AdminService adminService;
 
-    @PostMapping("/login")
-    public ResponseEntity<String> authenticateAccount(@ModelAttribute AdminDto adminDto) {
-        boolean isExist = adminService.authenticate(adminDto.getEmail(), adminDto.getPassword());
-        if(isExist) return ResponseEntity.ok("Berhasil dan ketemu");
-        else return ResponseEntity.ok("Berhasil tapi ga nemu");
-  }
+//    @PostMapping("/login")
+//    public ResponseEntity<String> authenticateAccount(@ModelAttribute AdminDto adminDto) {
+//        boolean isExist = adminService.authenticate(adminDto.getEmail(), adminDto.getPassword());
+//        if(isExist) return ResponseEntity.ok("Berhasil dan ketemu");
+//        else return ResponseEntity.ok("Berhasil tapi ga nemu");
+//   }
+
 
 }
