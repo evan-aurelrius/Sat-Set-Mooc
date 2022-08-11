@@ -36,7 +36,7 @@ public class Student implements User{
     @Column(name = "timestamp")
     private Timestamp created_at;
 
-    @Column(name = "token")
+    @Column(name = "token", unique = true)
     private String token;
 
     @ManyToMany(mappedBy = "students")
