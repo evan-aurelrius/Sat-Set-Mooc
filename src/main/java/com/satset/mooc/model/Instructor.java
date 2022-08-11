@@ -32,6 +32,9 @@ public class Instructor implements User{
     @Column(name = "role")
     private final String role = "instructor";
 
+    @Column(name = "verified_status")
+    private String verified_status = "Pending";
+
     @Column(name = "timestamp")
     private Timestamp created_at;
 
@@ -126,4 +129,15 @@ public class Instructor implements User{
         return s;
     }
 
+    public String getVerified_status() {
+        return verified_status;
+    }
+
+    public void setVerified_status(String verified_status) {
+        this.verified_status = verified_status;
+    }
+
+    public Timestamp getCreated_at() {
+        return created_at;
+    }
 }
