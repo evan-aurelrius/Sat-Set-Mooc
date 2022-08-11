@@ -30,9 +30,6 @@ public class Student implements User{
     @Column(name = "password")
     private String password;
 
-    @Column(name = "role")
-    private final String role = "instructor";
-
     @Column(name = "timestamp")
     private Timestamp created_at;
 
@@ -69,10 +66,6 @@ public class Student implements User{
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public String getRole() {
-        return role;
     }
 
     public Timestamp getCreated_at() {

@@ -29,9 +29,6 @@ public class Instructor implements User{
     @Column(name = "password")
     private String password;
 
-    @Column(name = "role")
-    private final String role = "instructor";
-
     @Column(name = "verified_status")
     private String verified_status = "Pending";
 
@@ -71,10 +68,6 @@ public class Instructor implements User{
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public String getRole() {
-        return role;
     }
 
     public String getToken() {
