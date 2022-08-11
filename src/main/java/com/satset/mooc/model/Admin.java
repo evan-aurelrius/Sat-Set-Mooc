@@ -25,7 +25,7 @@ public class Admin{
     @Column(name = "role")
     private final String role = "admin";
 
-    @Column(name = "token")
+    @Column(name = "token", unique = true)
     private String token;
 
     public Admin(String name, String email, String password, String token) {

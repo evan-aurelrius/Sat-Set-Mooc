@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @NoArgsConstructor
@@ -20,19 +18,39 @@ public class Quiz {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "question", columnDefinition = "TEXT")
-    private String question;
-
-    @Column(name = "opt_true")
-    private String opt_true;
-
-    @ElementCollection
-    @CollectionTable(name = "answers", joinColumns = @JoinColumn(name = "quiz_id"))
-    @Column(name ="answer")
-    private Set<String> answers = new HashSet<>();
+    @OneToMany(mappedBy = "quiz")
+    private List<Question> questions = new LinkedList<>();
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "course_id")
     @JsonIgnore
     private Course course;
+
+    public long getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void addQuestions(Question question) {
+        this.questions.add(question);
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
 }

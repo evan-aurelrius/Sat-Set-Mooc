@@ -40,7 +40,7 @@ public class Student implements User{
     private String token;
 
     @ManyToMany(mappedBy = "students")
-    private Set<Course> enrolledClass = new LinkedHashSet<>();
+    private List<Course> enrolledClass = new LinkedList<>();
 
     public Student(String name, String gender, String image, String email, String password, String token) {
         this.name = name;
@@ -75,6 +75,14 @@ public class Student implements User{
         return role;
     }
 
+    public Timestamp getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(Timestamp created_at) {
+        this.created_at = created_at;
+    }
+
     public String getToken() {
         return token;
     }
@@ -83,11 +91,11 @@ public class Student implements User{
         this.token = token;
     }
 
-    public Set<Course> getEnrolledClass() {
+    public List<Course> getEnrolledClass() {
         return enrolledClass;
     }
 
-    public void setEnrolledClass(Set<Course> courseOwned) {
+    public void setEnrolledClass(List<Course> courseOwned) {
         this.enrolledClass = courseOwned;
     }
 

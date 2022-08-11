@@ -2,6 +2,7 @@ package com.satset.mooc.model;
 
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.*;
 
 @Entity
@@ -30,6 +31,9 @@ public class Instructor implements User{
 
     @Column(name = "role")
     private final String role = "instructor";
+
+    @Column(name = "timestamp")
+    private Timestamp created_at;
 
     @Column(name = "token")
     private String token;
