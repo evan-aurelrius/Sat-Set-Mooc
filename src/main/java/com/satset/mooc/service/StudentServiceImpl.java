@@ -12,7 +12,7 @@ public class StudentServiceImpl implements StudentService {
     StudentRepository studentRepository;
 
     @Override
-    public Student registerStudent(String name, String email, String password) {
-        return studentRepository.save(new Student(name, email, password));
+    public Student registerStudent(String name, String gender, String image, String email, String password) {
+        return studentRepository.save(new Student(name, gender, image, email, password));
     }
 }
