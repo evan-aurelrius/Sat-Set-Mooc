@@ -9,7 +9,7 @@ import java.util.*;
 @Entity
 @NoArgsConstructor
 @Table(name="student")
-public class Student implements User{
+public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id", updatable = false)
@@ -45,6 +45,7 @@ public class Student implements User{
         this.image = image;
         this.email = email;
         this.password = password;
+        this.created_at = new Timestamp(System.currentTimeMillis());
 //        this.token = token;
     }
 

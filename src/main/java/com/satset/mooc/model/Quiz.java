@@ -1,6 +1,7 @@
 package com.satset.mooc.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ public class Quiz {
     private String title;
 
     @OneToMany(mappedBy = "quiz")
+    @JsonProperty("questions")
     private List<Question> questions = new LinkedList<>();
 
     @ManyToOne(cascade = CascadeType.PERSIST)
@@ -52,5 +54,9 @@ public class Quiz {
 
     public Course getCourse() {
         return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 }

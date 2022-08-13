@@ -1,6 +1,7 @@
 package com.satset.mooc.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -16,9 +17,6 @@ public class Question {
     @Column(name="id", updatable = false)
     private long id;
 
-    @Column(name = "title")
-    private String title;
-
     @Column(name = "question", columnDefinition = "TEXT")
     private String question;
 
@@ -26,25 +24,23 @@ public class Question {
     private String opt_true;
 
     @ElementCollection
-    @CollectionTable(name = "answers", joinColumns = @JoinColumn(name = "quiz_id"))
-    @Column(name ="answer")
-    private List<String> answers = new LinkedList<>();
+    @JsonProperty("opt")
+    @CollectionTable(name = "question_answer", joinColumns = @JoinColumn(name = "question_id"))
+    private List<String> opt = new LinkedList<>();
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "quiz_id")
     @JsonIgnore
     private Quiz quiz;
 
+    public Question(String question, String opt_true, List<String> opt) {
+        this.question = question;
+        this.opt_true = opt_true;
+        this.opt = opt;
+    }
+
     public long getId() {
         return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getQuestion() {
@@ -64,14 +60,26 @@ public class Question {
     }
 
     public List<String> getAnswers() {
-        return answers;
+        return opt;
     }
 
     public void setAnswers(List<String> answers) {
-        this.answers = answers;
+        this.opt = answers;
     }
 
     public Quiz getQuiz() {
         return quiz;
+    }
+
+    public List<String> getOpt() {
+        return opt;
+    }
+
+    public void setOpt(List<String> opt) {
+        this.opt = opt;
+    }
+
+    public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
     }
 }

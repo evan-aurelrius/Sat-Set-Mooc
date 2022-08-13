@@ -1,5 +1,6 @@
 package com.satset.mooc.service;
 
+import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Instructor;
 import com.satset.mooc.repository.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,17 @@ public class InstructorServiceImpl implements InstructorService{
     @Override
     public void setInstuctorStatus(Instructor instructor, String status) {
         instructor.setVerified_status(status);
+        save(instructor);
+    }
+
+    @Override
+    public void save(Instructor instructor) {
         instructorRepository.save(instructor);
+    }
+
+    @Override
+    public void addAndSaveCourse(Instructor instructor, Course course) {
+        instructor.addCourseOwned(course);
+        save(instructor);
     }
 }

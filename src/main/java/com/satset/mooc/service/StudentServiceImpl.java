@@ -15,4 +15,9 @@ public class StudentServiceImpl implements StudentService {
     public Student registerStudent(String name, String gender, String image, String email, String password) {
         return studentRepository.save(new Student(name, gender, image, email, password));
     }
+
+    @Override
+    public void save(Student student) {
+        studentRepository.save(student);
+    }
 }
