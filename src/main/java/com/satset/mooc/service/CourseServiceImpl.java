@@ -22,6 +22,11 @@ public class CourseServiceImpl implements CourseService{
     QuizService quizService;
 
     @Override
+    public List<Course> getCourse() {
+        return courseRepository.findAll();
+    }
+
+    @Override
     public Course getCourseById(Long course_id) {
         return courseRepository.findById(course_id).orElse(null);
     }
@@ -67,4 +72,6 @@ public class CourseServiceImpl implements CourseService{
         course.getLectures().remove(lecture);
         courseRepository.save(course);
     }
+
+
 }

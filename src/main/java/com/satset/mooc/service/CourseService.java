@@ -4,7 +4,12 @@ import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Instructor;
 import com.satset.mooc.model.Lecture;
 
+import java.util.List;
+
 public interface CourseService {
+
+
+    List<Course> getCourse();
 
     Course getCourseById(Long course_id);
 

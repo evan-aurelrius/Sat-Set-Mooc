@@ -46,7 +46,7 @@ public class Student {
         this.image = image;
         this.email = email;
         this.password = password;
-        this.created_at = new Timestamp(System.currentTimeMillis());
+        this.createdAt = new Timestamp(System.currentTimeMillis());
 //        this.token = token;
     }
 
