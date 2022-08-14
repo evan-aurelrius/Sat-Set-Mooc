@@ -1,7 +1,11 @@
 package com.satset.mooc.service;
 
+import com.satset.mooc.model.Admin;
+
 public interface AdminService {
 
-    public Boolean authenticate(String email, String password);
+    Boolean authenticate(String email, String password);
+
+    void save(Admin admin);
 
 }

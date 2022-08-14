@@ -1,16 +1,16 @@
 package com.satset.mooc.controller;
 
 import com.satset.mooc.model.AdminDto;
-import com.satset.mooc.model.Instructor;
 import com.satset.mooc.service.AdminService;
 import com.satset.mooc.service.CourseService;
 import com.satset.mooc.service.InstructorService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -27,21 +27,20 @@ public class AdminController {
     @Autowired
     CourseService courseService;
 
+    Logger logger = LoggerFactory.getLogger(AdminController.class);
     private String msg = "";
 
     @PostMapping("/api/admin-login")
-    public ResponseEntity<String> authenticateAccount(@ModelAttribute AdminDto adminDto) {
+    public ResponseEntity<String> authenticateAccount(@RequestBody AdminDto adminDto) {
         var isExist = adminService.authenticate(adminDto.getEmail(), adminDto.getPassword());
-        if(isExist) msg = "User is valid";
-        else msg = "Invalid email or password!";
-
-        return ResponseEntity.ok(msg);
+        if(isExist) return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/api/verify-instructor")
-    public ResponseEntity<String> verifyInstructor(@ModelAttribute Map<String, Object> request) {
-        var user_id = (Long) request.get("user_id");
-        var verified_status = StringUtils.capitalize((String) request.get("verified_status"));
+    public ResponseEntity<String> verifyInstructor(@RequestBody Map<String, Object> request) {
+        var user_id = Long.valueOf((Integer)request.get("user_id"));
+        var verified_status = (String) request.get("verified_status");
         var instructor = instructorService.getInstructorById(user_id);
 
         if(instructor==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -50,9 +49,9 @@ public class AdminController {
     }
 
     @PostMapping("/api/verify-course")
-    public ResponseEntity<String> verifyCourse(@ModelAttribute Map<String, Object> request) {
+    public ResponseEntity<String> verifyCourse(@RequestBody Map<String, Object> request) {
         var course_id = (Long) request.get("course_id");
-        var verified_status = StringUtils.capitalize((String) request.get("verified_status"));
+        var verified_status = (String) request.get("verified_status");
         var course = courseService.getCourseById(course_id);
 
         if(course==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

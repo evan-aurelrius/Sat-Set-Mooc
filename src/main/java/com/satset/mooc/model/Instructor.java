@@ -8,7 +8,7 @@ import java.util.*;
 @Entity
 @NoArgsConstructor
 @Table(name="instructor")
-public class Instructor implements User{
+public class Instructor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id", updatable = false)
@@ -35,19 +35,20 @@ public class Instructor implements User{
     @Column(name = "timestamp")
     private Timestamp created_at;
 
-    @Column(name = "token", unique = true)
-    private String token;
+//    @Column(name = "token", unique = true)
+//    private String token;
 
     @OneToMany(mappedBy = "instructor")
     private Set<Course> courseOwned = new LinkedHashSet<>();
 
-    public Instructor(String name, String gender, String image, String email, String password, String token) {
+    public Instructor(String name, String gender, String image, String email, String password) {
         this.name = name;
         this.gender = gender;
         this.image = image;
         this.email = email;
         this.password = password;
-        this.token = token;
+        this.created_at = new Timestamp(System.currentTimeMillis());
+//        this.token = token;
     }
 
     public long getId() {
@@ -70,13 +71,13 @@ public class Instructor implements User{
         this.image = image;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
+//    public String getToken() {
+//        return token;
+//    }
+//
+//    public void setToken(String token) {
+//        this.token = token;
+//    }
 
     public Set<Course> getCourseOwned() {
         return courseOwned;

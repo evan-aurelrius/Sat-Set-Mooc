@@ -1,7 +1,10 @@
 package com.satset.mooc.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.LinkedHashSet;
@@ -11,11 +14,12 @@ import java.util.Set;
 
 @Entity
 @NoArgsConstructor
-@Table(name="course")
+@Table(name = "course")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id", updatable = false)
+    @Column(name = "id", updatable = false)
     private long id;
 
     @Column(name = "title")
@@ -39,9 +43,7 @@ public class Course {
     private Instructor instructor;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "student_enroll_course",
-            joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id"))
+    @JoinTable(name = "student_enroll_course", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
     @JsonIgnore
     private Set<Student> students = new LinkedHashSet<>();
 
@@ -51,11 +53,11 @@ public class Course {
     @OneToMany(mappedBy = "course")
     private List<Quiz> quizzes = new LinkedList<>();
 
-    public Course(String title, String description, String image, Timestamp updated_at, Instructor instructor, Set<Student> students, List<Lecture> lectures, List<Quiz> quizzes) {
+    public Course(String title, String description, String image, Instructor instructor, Set<Student> students, List<Lecture> lectures, List<Quiz> quizzes) {
         this.title = title;
         this.description = description;
         this.image = image;
-        this.updated_at = updated_at;
+        this.updated_at = updateTime();
         this.instructor = instructor;
         this.students = students;
         this.lectures = lectures;
@@ -70,27 +72,12 @@ public class Course {
         return title;
     }
 
-    public void setTitle(String title) {
-        updateTime();
-        this.title = title;
-    }
-
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        updateTime();
-        this.description = description;
-    }
-
     public String getImage() {
         return image;
-    }
-
-    public void setImage(String image) {
-        updateTime();
-        this.image = image;
     }
 
     public Timestamp getUpdated_at() {
@@ -108,10 +95,6 @@ public class Course {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public void setUpdated_at(Timestamp updated_at) {
-        this.updated_at = updated_at;
     }
 
     public Instructor getInstructor() {
@@ -145,11 +128,6 @@ public class Course {
         this.lectures.add(lecture);
     }
 
-    public void setLectures(List<Lecture> lectures) {
-        updateTime();
-        this.lectures = lectures;
-    }
-
     public List<Quiz> getQuizzes() {
         return quizzes;
     }
@@ -159,8 +137,27 @@ public class Course {
         this.quizzes.add(quiz);
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setUpdated_at(Timestamp updated_at) {
+        this.updated_at = updated_at;
+    }
+
+    public void setLectures(List<Lecture> lectures) {
+        this.lectures = lectures;
+    }
+
     public void setQuizzes(List<Quiz> quizzes) {
-        updateTime();
         this.quizzes = quizzes;
     }
 }

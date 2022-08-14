@@ -25,14 +25,14 @@ public class Admin{
     @Column(name = "role")
     private final String role = "admin";
 
-    @Column(name = "token", unique = true)
-    private String token;
+//    @Column(name = "token", unique = true)
+//    private String token;
 
-    public Admin(String name, String email, String password, String token) {
+    public Admin(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.token = token;
+//        this.token = token;
     }
 
     public Admin(AdminDto adminDto) {
