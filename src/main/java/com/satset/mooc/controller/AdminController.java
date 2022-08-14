@@ -1,6 +1,6 @@
 package com.satset.mooc.controller;
 
-import com.satset.mooc.model.AdminDto;
+import com.satset.mooc.model.dto.AdminDto;
 import com.satset.mooc.service.AdminService;
 import com.satset.mooc.service.CourseService;
 import com.satset.mooc.service.InstructorService;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -43,14 +42,14 @@ public class AdminController {
         var verified_status = (String) request.get("verified_status");
         var instructor = instructorService.getInstructorById(user_id);
 
-        if(instructor==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if(instructor==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         instructorService.setInstuctorStatus(instructor, verified_status);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/api/verify-course")
     public ResponseEntity<String> verifyCourse(@RequestBody Map<String, Object> request) {
-        var course_id = (Long) request.get("course_id");
+        var course_id = Long.valueOf((Integer)request.get("course_id"));
         var verified_status = (String) request.get("verified_status");
         var course = courseService.getCourseById(course_id);
 

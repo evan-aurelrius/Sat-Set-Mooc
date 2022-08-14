@@ -1,9 +1,7 @@
 package com.satset.mooc.controller;
 
 import com.satset.mooc.model.Course;
-import com.satset.mooc.model.CourseDto;
-import com.satset.mooc.model.Lecture;
-import com.satset.mooc.model.LectureDto;
+import com.satset.mooc.model.dto.CourseDto;
 import com.satset.mooc.service.CourseService;
 import com.satset.mooc.util.MapperUtil;
 import org.modelmapper.ModelMapper;
@@ -13,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -26,10 +23,8 @@ public class CourseController {
 
     private ModelMapper modelMapper= MapperUtil.getInstance();
 
-    Logger logger = LoggerFactory.getLogger(AdminController.class);
-
     @PostMapping("/api/course")
-    public ResponseEntity<String> verifyCourse(@RequestBody CourseDto courseDto) {
+    public ResponseEntity<String> createCourse(@RequestBody CourseDto courseDto) {
         Course course = modelMapper.map(courseDto, Course.class);
         Boolean courseIsCreated = courseService.createCourse(course, courseDto.getUser_id());
 

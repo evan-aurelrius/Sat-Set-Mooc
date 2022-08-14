@@ -1,8 +1,8 @@
 package com.satset.mooc.model;
 
+import com.satset.mooc.model.dto.AdminDto;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
-import java.util.ArrayList;
 
 @Entity
 @NoArgsConstructor

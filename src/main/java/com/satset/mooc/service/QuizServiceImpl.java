@@ -25,4 +25,16 @@ public class QuizServiceImpl implements QuizService{
             questionService.addAndSaveAllQuestions(q.getQuestions(),q);
         }
     }
+
+    @Override
+    public void setAndSaveQuiz(Quiz quiz, Course course) {
+        questionService.addAndSaveAllQuestions(quiz.getQuestions(),quiz);
+        quiz.setCourse(course);
+        save(quiz);
+    }
+
+    @Override
+    public void save(Quiz quiz) {
+        quizRepository.save(quiz);
+    }
 }

@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class LectureServiceImpl implements LectureService{
@@ -40,9 +39,19 @@ public class LectureServiceImpl implements LectureService{
     }
 
     @Override
-    public void addAndSaveLecture(Lecture lectures, Course course) {
+    public void setAndSaveLecture(Lecture lectures, Course course) {
         lectures.setCourse(course);
         save(lectures);
+    }
+
+    @Override
+    public void modify(long id, Lecture lecture) {
+        var oldLecture = getLectureById(id);
+        if(oldLecture!=null) {
+            oldLecture.setTitle(lecture.getTitle());
+            oldLecture.setLink(lecture.getLink());
+            lectureRepository.save(oldLecture);
+        }
     }
 
     @Override

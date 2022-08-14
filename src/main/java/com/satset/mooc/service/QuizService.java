@@ -9,4 +9,8 @@ public interface QuizService {
 
     void saveQuizzesAndQuestions(List<Quiz> quizzes, Course course);
 
+    void setAndSaveQuiz(Quiz quiz, Course course);
+
+    void save(Quiz quiz);
+
 }
