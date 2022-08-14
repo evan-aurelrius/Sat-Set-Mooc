@@ -8,31 +8,44 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Data
 public class UserDetailsImpl implements UserDetails {
-
+    private long id;
+    private String name;
     private String email;
-    private String nama;
+    private String gender;
+    private String image;
+    private String roles;
+    private Timestamp createdAt;
     @JsonIgnore
     private String password;
-    private String roles;
 
-    public UserDetailsImpl(String email,
-            String name,
-            String password) {
+    public UserDetailsImpl(long id, String name, String gender, String image, String email, String roles, Timestamp createdAt, String password) {
+        this.id = id;
+        this.name = name;
+        this.gender = gender;
+        this.image = image;
         this.email = email;
-        this.nama = name;
+        this.roles = roles;
+        this.createdAt = createdAt;
         this.password = password;
     }
 
     public static UserDetailsImpl build(Student student) {
-        return new UserDetailsImpl(student.getEmail(),
-                student.getName(),
-                student.getPassword());
+        return new UserDetailsImpl(student.getId(),
+                                student.getName(),
+                                student.getGender(),
+                                student.getImage(),
+                                student.getEmail(),
+                                "student",
+                                student.getCreatedAt(),
+                                student.getPassword()
+        );
     }
 
     @Override

@@ -11,12 +11,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.sql.Timestamp;
 
 @RestController
+@RequestMapping("/api")
 public class UserController {
 
     @Autowired
@@ -33,18 +33,16 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> authenticateUser(@RequestBody LoginRequest request){
-        System.out.println(request);
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtUtils.generateJwtToken(authentication);
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
-        return ResponseEntity.ok(new JwtResponse(token, principal.getEmail()));
+        return ResponseEntity.ok(new JwtResponse(principal.getId(), principal.getName(), principal.getGender(), principal.getImage(), principal.getEmail(), principal.getRoles(), principal.getCreatedAt(), token));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody SignupRequest request){
-        System.out.println(request);
+    public ResponseEntity<Student> register(@RequestBody SignupRequest request){
         Student student = studentService.registerStudent(request.getName(), request.getGender(), request.getImage(), request.getEmail(), passwordEncoder.encode(request.getPassword()));
-        return ResponseEntity.ok("test");
+        return ResponseEntity.ok(student);
     }
 }

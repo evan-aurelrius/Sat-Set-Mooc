@@ -5,6 +5,8 @@ import com.satset.mooc.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CourseServiceImpl implements CourseService{
 
@@ -21,4 +23,10 @@ public class CourseServiceImpl implements CourseService{
         course.setStatus(status);
         courseRepository.save(course);
     }
+
+    @Override
+    public List<Course> getAllCourse() {
+        return courseRepository.findAll();
+    }
+
 }
