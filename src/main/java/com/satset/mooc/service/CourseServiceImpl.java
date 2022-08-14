@@ -2,6 +2,7 @@ package com.satset.mooc.service;
 
 import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Instructor;
+import com.satset.mooc.model.Lecture;
 import com.satset.mooc.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,5 +46,23 @@ public class CourseServiceImpl implements CourseService{
     @Override
     public void deleteCourse(Course course) {
         courseRepository.delete(course);
+    }
+
+    @Override
+    public void addLecture(Course course, Lecture lecture) {
+        lectureService.addAndSaveLecture(lecture, course);
+        course.addLecture(lecture);
+        save(course);
+    }
+
+    @Override
+    public void save(Course course) {
+        courseRepository.save(course);
+    }
+
+    @Override
+    public void deleteLecture(Course course, Lecture lecture) {
+        course.getLectures().remove(lecture);
+        courseRepository.save(course);
     }
 }

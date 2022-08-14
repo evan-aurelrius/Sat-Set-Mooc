@@ -1,9 +1,13 @@
 package com.satset.mooc.service;
 
+import com.satset.mooc.controller.AdminController;
 import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Lecture;
 import com.satset.mooc.repository.LectureRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,12 +18,12 @@ public class LectureServiceImpl implements LectureService{
 
     @Autowired
     LectureRepository lectureRepository;
+    @Autowired @Lazy
+    CourseService courseService;
 
     @Override
-    public Lecture buildLecturesFromCourseRequest(Map<String, Object> request) {
-        var title = request.get("title").toString();
-        var link = request.get("description").toString();
-        return save(new Lecture(title, link));
+    public Lecture getLectureById(long id) {
+        return lectureRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -33,6 +37,23 @@ public class LectureServiceImpl implements LectureService{
             l.setCourse(course);
         }
         lectureRepository.saveAll(lectures);
+    }
+
+    @Override
+    public void addAndSaveLecture(Lecture lectures, Course course) {
+        lectures.setCourse(course);
+        save(lectures);
+    }
+
+    @Override
+    public void deleteLecture(long id) {
+        Logger logger = LoggerFactory.getLogger(AdminController.class);
+        Lecture lecture = getLectureById(id);
+        if(lecture!=null){
+            Course course = lecture.getCourse();
+            courseService.deleteLecture(course, lecture);
+            lectureRepository.deleteById(id);
+        }
     }
 
 }

@@ -26,6 +26,11 @@ public class Lecture {
     @JsonProperty("link")
     private String link;
 
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "course_id")
+    @JsonIgnore
+    private Course course;
+
     public Lecture(String title, String link) {
         this.title = title;
         this.link = link;
@@ -59,8 +64,4 @@ public class Lecture {
         this.course = course;
     }
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "course_id")
-    @JsonIgnore
-    private Course course;
 }
