@@ -2,19 +2,23 @@ package com.satset.mooc.controller;
 
 import com.satset.mooc.model.Course;
 import com.satset.mooc.model.dto.CourseDto;
+import com.satset.mooc.model.response.InstructorCourseResponse;
 import com.satset.mooc.service.CourseService;
 import com.satset.mooc.util.MapperUtil;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.HashMap;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api")
 //@PreAuthorize("isAuthenticated()")
 public class CourseController {
 
@@ -23,7 +27,9 @@ public class CourseController {
 
     private ModelMapper modelMapper= MapperUtil.getInstance();
 
-    @PostMapping("/api/course")
+    Logger logger = LoggerFactory.getLogger(AdminController.class);
+
+    @PostMapping("/course")
     public ResponseEntity<String> createCourse(@RequestBody CourseDto courseDto) {
         Course course = modelMapper.map(courseDto, Course.class);
         Boolean courseIsCreated = courseService.createCourse(course, courseDto.getUser_id());
@@ -31,4 +37,21 @@ public class CourseController {
         if(Boolean.FALSE.equals(courseIsCreated)) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("/mycourse/{page}/{user_id}")
+    public ResponseEntity<?> getMyCourse(@PathVariable("page") int page, @PathVariable("user_id") long user_id) {
+        if(page<1 || user_id<1) return ResponseEntity.badRequest().build();
+        List<InstructorCourseResponse> courses = courseService.getCourseWithPagination(page, user_id);
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("data", courses);
+        map.put("next", "/api/mycourse/%d/".formatted(page+1));
+        if(page>1)
+            map.put("prev", "/api/mycourse/%d/".formatted(page-1));
+        else
+            map.put("prev","");
+
+        return ResponseEntity.ok(map);
+    }
+
 }

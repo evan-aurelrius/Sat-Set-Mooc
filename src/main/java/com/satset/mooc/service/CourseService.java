@@ -4,6 +4,10 @@ import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Instructor;
 import com.satset.mooc.model.Lecture;
 import com.satset.mooc.model.Quiz;
+import com.satset.mooc.model.response.InstructorCourseResponse;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 public interface CourseService {
 
@@ -22,5 +26,7 @@ public interface CourseService {
     void save(Course course);
 
     void deleteLecture(Course course, Lecture lecture);
+
+    List<InstructorCourseResponse> getCourseWithPagination(int page, long user_id);
 
 }

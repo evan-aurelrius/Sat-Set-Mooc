@@ -21,4 +21,23 @@ public class QuestionServiceImp implements QuestionService{
         }
         questionRepository.saveAll(questions);
     }
+
+    @Override
+    public void modify(List<Question> oldQuestions, List<Question> newQuestions) {
+
+        
+
+        oldQuestions = newQuestions;
+        saveAll(oldQuestions);
+    }
+
+    @Override
+    public void deleteQuestions(List<Question> questions) {
+        questionRepository.deleteAll(questions);
+    }
+
+    @Override
+    public void saveAll(List<Question> questions) {
+        questionRepository.saveAll(questions);
+    }
 }

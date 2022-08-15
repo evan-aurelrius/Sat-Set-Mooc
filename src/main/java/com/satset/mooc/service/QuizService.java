@@ -13,4 +13,8 @@ public interface QuizService {
 
     void save(Quiz quiz);
 
+    void modify(long quiz_id, Quiz quiz);
+
+    void delete(long id);
+
 }
