@@ -19,6 +19,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @PreAuthorize("isAuthenticated()")
@@ -30,7 +32,7 @@ public class CourseController {
 
     private ModelMapper modelMapper= MapperUtil.getInstance();
 
-    @PostMapping("/api/course")
+    @PostMapping("/course")
     public ResponseEntity<String> createCourse(@RequestBody CourseDto courseDto) {
         Course course = modelMapper.map(courseDto, Course.class);
         Boolean courseIsCreated = courseService.createCourse(course, courseDto.getUser_id());
