@@ -35,9 +35,6 @@ public class UserController {
     PasswordEncoder passwordEncoder;
 
     @Autowired
-    JwtUtils jwtUtils;
-
-    @Autowired
     UserUtil userUtil;
 
     private ModelMapper modelMapper= MapperUtil.getInstance();
