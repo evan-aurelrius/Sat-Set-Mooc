@@ -4,7 +4,6 @@ import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Lecture;
 
 import java.util.List;
-import java.util.Map;
 
 public interface LectureService {
 
@@ -14,7 +13,8 @@ public interface LectureService {
 
     void addAndSaveAllLectures(List<Lecture> lectures, Course course);
 
-    void addAndSaveLecture(Lecture lectures, Course course);
+    void setAndSaveLecture(Lecture lectures, Course course);
+    void modify(long id, Lecture lecture);
 
     void deleteLecture(long id);
 

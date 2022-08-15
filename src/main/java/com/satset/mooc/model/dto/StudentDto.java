@@ -1,4 +1,4 @@
-package com.satset.mooc.model;
+package com.satset.mooc.model.dto;
 
 import lombok.Data;
 

@@ -1,7 +1,7 @@
 package com.satset.mooc.controller;
 
-import com.satset.mooc.model.*;
-import com.satset.mooc.security.service.UserDetailsImpl;
+import com.satset.mooc.model.Course;
+import com.satset.mooc.model.dto.CourseDto;
 import com.satset.mooc.service.CourseService;
 import com.satset.mooc.util.MapperUtil;
 import org.modelmapper.ModelMapper;
@@ -17,11 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpSession;
-import java.security.Principal;
-import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @PreAuthorize("isAuthenticated()")
@@ -33,11 +30,8 @@ public class CourseController {
 
     private ModelMapper modelMapper= MapperUtil.getInstance();
 
-    Logger logger = LoggerFactory.getLogger(AdminController.class);
-
-
-    @PostMapping("/course")
-    public ResponseEntity<String> verifyCourse(@RequestBody CourseDto courseDto) {
+    @PostMapping("/api/course")
+    public ResponseEntity<String> createCourse(@RequestBody CourseDto courseDto) {
         Course course = modelMapper.map(courseDto, Course.class);
         Boolean courseIsCreated = courseService.createCourse(course, courseDto.getUser_id());
 

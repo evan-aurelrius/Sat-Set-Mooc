@@ -3,6 +3,7 @@ package com.satset.mooc.service;
 import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Instructor;
 import com.satset.mooc.model.Lecture;
+import com.satset.mooc.model.Quiz;
 import com.satset.mooc.repository.CourseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,8 +64,15 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     public void addLecture(Course course, Lecture lecture) {
-        lectureService.addAndSaveLecture(lecture, course);
+        lectureService.setAndSaveLecture(lecture, course);
         course.addLecture(lecture);
+        save(course);
+    }
+
+    @Override
+    public void addQuiz(Course course, Quiz quiz) {
+        quizService.setAndSaveQuiz(quiz, course);
+        course.addQuiz(quiz);
         save(course);
     }
 

@@ -3,9 +3,7 @@ package com.satset.mooc.service;
 import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Instructor;
 import com.satset.mooc.model.Lecture;
-import org.springframework.data.domain.Pageable;
-
-import java.util.List;
+import com.satset.mooc.model.Quiz;
 
 public interface CourseService {
 
@@ -21,6 +19,8 @@ public interface CourseService {
     void deleteCourse(Course course);
 
     void addLecture(Course course, Lecture lecture);
+
+    void addQuiz(Course course, Quiz quiz);
 
     void save(Course course);
 
