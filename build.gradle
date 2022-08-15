@@ -14,6 +14,14 @@ configurations {
 	}
 }
 
+jar {
+	manifest {
+		attributes(
+				'Main-Class': 'com/satset/mooc/SatSetMoocApplication'
+		)
+	}
+}
+
 repositories {
 	mavenCentral()
 }
