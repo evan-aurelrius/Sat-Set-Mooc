@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface QuizService {
 
+    Quiz getQuizById(long id);
+
     void saveQuizzesAndQuestions(List<Quiz> quizzes, Course course);
 
     void setAndSaveQuiz(Quiz quiz, Course course);

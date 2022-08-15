@@ -59,14 +59,6 @@ public class Question {
         this.opt_true = opt_true;
     }
 
-    public List<String> getAnswers() {
-        return opt;
-    }
-
-    public void setAnswers(List<String> answers) {
-        this.opt = answers;
-    }
-
     public Quiz getQuiz() {
         return quiz;
     }

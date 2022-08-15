@@ -44,12 +44,12 @@ public class InitializeSqlDataServiceImpl implements InitializeSqlDataService{
     }
 
     private void initializeInstructor() {
-        Instructor instructor1 = new Instructor("Jack","m","profile1.jpeg","jacktheripper@gmail.com", "jack123");
+        Instructor instructor1 = new Instructor("Jack","m","profile1.jpeg","jacktheripper@gmail.com", passwordEncoder.encode("jack123"));
         instructorRepository.save(instructor1);
     }
 
     private void initializeStudent() {
-        Student student1 = new Student("Timmy","m","profile2.jpg","timmyadventure@gmail.com","timmy123");
+        Student student1 = new Student("Timmy","m","profile2.jpg","timmyadventure@gmail.com",passwordEncoder.encode("timmy123"));
         studentRepository.save(student1);
     }
 }

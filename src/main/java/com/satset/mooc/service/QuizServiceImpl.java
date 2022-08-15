@@ -17,6 +17,11 @@ public class QuizServiceImpl implements QuizService{
     QuestionService questionService;
 
     @Override
+    public Quiz getQuizById(long id) {
+        return quizRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public void saveQuizzesAndQuestions(List<Quiz> quizzes, Course course) {
         quizRepository.saveAll(quizzes);
         for(Quiz q:quizzes) {
