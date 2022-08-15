@@ -1,5 +1,7 @@
 package com.satset.mooc.security.service;
 
+import com.satset.mooc.model.Admin;
+import com.satset.mooc.model.Instructor;
 import com.satset.mooc.model.Student;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -20,18 +22,18 @@ public class UserDetailsImpl implements UserDetails {
     private String email;
     private String gender;
     private String image;
-    private String roles;
+    private String role;
     private Timestamp createdAt;
     @JsonIgnore
     private String password;
 
-    public UserDetailsImpl(long id, String name, String gender, String image, String email, String roles, Timestamp createdAt, String password) {
+    public UserDetailsImpl(long id, String name, String gender, String image, String email, String role, Timestamp createdAt, String password) {
         this.id = id;
         this.name = name;
         this.gender = gender;
         this.image = image;
         this.email = email;
-        this.roles = roles;
+        this.role = role;
         this.createdAt = createdAt;
         this.password = password;
     }
@@ -48,11 +50,42 @@ public class UserDetailsImpl implements UserDetails {
         );
     }
 
+    public static UserDetailsImpl build(Instructor instructor) {
+        return new UserDetailsImpl(instructor.getId(),
+                instructor.getName(),
+                instructor.getGender(),
+                instructor.getImage(),
+                instructor.getEmail(),
+                "instructor",
+                instructor.getCreated_at(),
+                instructor.getPassword()
+        );
+    }
+    public static UserDetailsImpl build(Admin admin) {
+        return new UserDetailsImpl(admin.getId(),
+                admin.getName(),
+                "",
+                "",
+                admin.getEmail(),
+                "admin",
+                null,
+                admin.getPassword()
+        );
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        if (StringUtils.hasText(roles)) {
-            String[] splits = roles.replaceAll(" ", "").split(",");
+        if (StringUtils.hasText(role)) {
+            String[] splits = role.replaceAll(" ", "").split(",");
             for (String string : splits) {
                 authorities.add(new SimpleGrantedAuthority(string));
             }

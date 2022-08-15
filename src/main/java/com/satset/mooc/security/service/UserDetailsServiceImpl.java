@@ -1,8 +1,13 @@
 package com.satset.mooc.security.service;
 
+import com.satset.mooc.model.Admin;
+import com.satset.mooc.model.Instructor;
 import com.satset.mooc.model.Student;
 import com.satset.mooc.repository.InstructorRepository;
 import com.satset.mooc.repository.StudentRepository;
+import com.satset.mooc.service.AdminService;
+import com.satset.mooc.service.InstructorService;
+import com.satset.mooc.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,31 +18,32 @@ import org.springframework.stereotype.Service;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    StudentRepository studentRepository;
+    StudentService studentService;
 
     @Autowired
-    InstructorRepository instructorRepository;
+    InstructorService instructorService;
+
+    @Autowired
+    AdminService adminService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Student student = studentRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Email " + email + " not found"));
-
-        return com.satset.mooc.security.service.UserDetailsImpl.build(student);
-    }
-
-    public UserDetails loadUserByUsername(String email, String role) throws UsernameNotFoundException {
-        if (role == "student"){
-            Student student = studentRepository.findByEmail(email)
-                    .orElseThrow(() -> new UsernameNotFoundException("Email " + email + " not found"));
-
-            return com.satset.mooc.security.service.UserDetailsImpl.build(student);
-        }else{
-            Student student = instructorRepository.findByEmail(email)
-                    .orElseThrow(() -> new UsernameNotFoundException("Email " + email + " not found"));
-
+        Student student = studentService.getStudentByEmail(email);
+        if (student != null) {
             return com.satset.mooc.security.service.UserDetailsImpl.build(student);
         }
 
+        Instructor instructor = instructorService.getInstructorByEmail(email);
+        if (instructor != null) {
+            return com.satset.mooc.security.service.UserDetailsImpl.build(instructor);
+        }
+
+        Admin admin = adminService.getAdminByEmail(email);
+        if (admin != null) {
+            return com.satset.mooc.security.service.UserDetailsImpl.build(admin);
+        }
+
+        throw new UsernameNotFoundException("Email " + email + " not found");
     }
+
 }

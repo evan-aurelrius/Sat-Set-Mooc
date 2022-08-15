@@ -4,7 +4,11 @@ import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Instructor;
 import com.satset.mooc.model.Lecture;
 import com.satset.mooc.repository.CourseRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,10 +24,12 @@ public class CourseServiceImpl implements CourseService{
     LectureService lectureService;
     @Autowired
     QuizService quizService;
+    @Autowired
+    StudentService studentService;
 
     @Override
-    public List<Course> getCourse() {
-        return courseRepository.findAll();
+    public Iterable<Course> getCourse(Pageable pageable) {
+        return courseRepository.findAll(pageable);
     }
 
     @Override
@@ -71,6 +77,16 @@ public class CourseServiceImpl implements CourseService{
     public void deleteLecture(Course course, Lecture lecture) {
         course.getLectures().remove(lecture);
         courseRepository.save(course);
+    }
+
+    @Override
+    public void enroll(Long course_id, Long student_id) {
+        var student = studentService.getStudentById(student_id);
+        var course = courseRepository.findById(course_id).orElse(null);
+        studentService.addCourse(student, course);
+        course.addStudents(student);
+        save(course);
+
     }
 
 
