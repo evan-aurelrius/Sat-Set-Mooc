@@ -1,5 +1,7 @@
 package com.satset.mooc.controller;
 
+import com.satset.mooc.model.Course;
+import com.satset.mooc.model.Instructor;
 import com.satset.mooc.model.JwtResponse;
 import com.satset.mooc.model.dto.AdminDto;
 import com.satset.mooc.service.AdminService;
@@ -36,9 +38,9 @@ public class AdminController {
 
     @PostMapping("/api/verify-instructor")
     public ResponseEntity<String> verifyInstructor(@RequestBody Map<String, Object> request) {
-        var user_id = Long.valueOf((Integer)request.get("user_id"));
-        var verified_status = (String) request.get("verified_status");
-        var instructor = instructorService.getInstructorById(user_id);
+        long user_id = Long.valueOf((Integer)request.get("user_id"));
+        String verified_status = (String) request.get("verified_status");
+        Instructor instructor = instructorService.getInstructorById(user_id);
 
         if(instructor==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         instructorService.setInstuctorStatus(instructor, verified_status);
@@ -47,9 +49,9 @@ public class AdminController {
 
     @PostMapping("/api/verify-course")
     public ResponseEntity<String> verifyCourse(@RequestBody Map<String, Object> request) {
-        var course_id = Long.valueOf((Integer)request.get("course_id"));
-        var verified_status = (String) request.get("verified_status");
-        var course = courseService.getCourseById(course_id);
+        Long course_id = Long.valueOf((Integer)request.get("course_id"));
+        String verified_status = (String) request.get("verified_status");
+        Course course = courseService.getCourseById(course_id);
 
         if(course==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         courseService.setCourseStatus(course, verified_status);

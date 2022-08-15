@@ -46,7 +46,7 @@ public class LectureServiceImpl implements LectureService{
 
     @Override
     public void modify(long id, Lecture lecture) {
-        var oldLecture = getLectureById(id);
+        Lecture oldLecture = getLectureById(id);
         if(oldLecture!=null) {
             oldLecture.setTitle(lecture.getTitle());
             oldLecture.setLink(lecture.getLink());

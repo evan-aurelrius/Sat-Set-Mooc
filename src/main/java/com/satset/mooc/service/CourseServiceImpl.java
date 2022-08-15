@@ -1,10 +1,7 @@
 package com.satset.mooc.service;
 
 import com.satset.mooc.controller.AdminController;
-import com.satset.mooc.model.Course;
-import com.satset.mooc.model.Instructor;
-import com.satset.mooc.model.Lecture;
-import com.satset.mooc.model.Quiz;
+import com.satset.mooc.model.*;
 import com.satset.mooc.model.response.InstructorCourseResponse;
 import com.satset.mooc.repository.CourseRepository;
 import org.slf4j.Logger;
@@ -95,8 +92,8 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     public void enroll(Long course_id, Long student_id) {
-        var student = studentService.getStudentById(student_id);
-        var course = courseRepository.findById(course_id).orElse(null);
+        Student student = studentService.getStudentById(student_id);
+        Course course = courseRepository.findById(course_id).orElse(null);
         studentService.addCourse(student, course);
         course.addStudents(student);
         save(course);
