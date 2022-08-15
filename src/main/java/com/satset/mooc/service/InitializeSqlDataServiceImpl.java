@@ -5,6 +5,7 @@ import com.satset.mooc.model.Instructor;
 import com.satset.mooc.model.Student;
 import com.satset.mooc.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,6 +17,8 @@ public class InitializeSqlDataServiceImpl implements InitializeSqlDataService{
     InstructorRepository instructorRepository;
     @Autowired
     StudentRepository studentRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
     @Autowired
     CourseRepository courseRepository;
     @Autowired
@@ -36,7 +39,7 @@ public class InitializeSqlDataServiceImpl implements InitializeSqlDataService{
     }
 
     private void initializeAdmin() {
-        Admin admin1 = new Admin("Administrator","admin1@localhost","admin123");
+        Admin admin1 = new Admin("Administrator","admin1@localhost",passwordEncoder.encode("admin123"));
         adminRepository.save(admin1);
     }
 

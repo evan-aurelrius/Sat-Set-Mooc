@@ -2,6 +2,7 @@ package com.satset.mooc.service;
 
 import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Instructor;
+import com.satset.mooc.model.Student;
 import com.satset.mooc.repository.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,8 +14,23 @@ public class InstructorServiceImpl implements InstructorService{
     InstructorRepository instructorRepository;
 
     @Override
+    public Instructor registerInstructor(String name, String gender, String image, String email, String password) {
+        return instructorRepository.save(new Instructor(name, gender, image, email, password));
+    }
+
+    @Override
+    public Boolean instructorExist(String email) {
+        return instructorRepository.findByEmail(email).isPresent();
+    }
+
+    @Override
     public Instructor getInstructorById(Long user_id) {
         return instructorRepository.findById(user_id).orElse(null);
+    }
+
+    @Override
+    public Instructor getInstructorByEmail(String email) {
+        return instructorRepository.findByEmail(email).orElse(null);
     }
 
     @Override

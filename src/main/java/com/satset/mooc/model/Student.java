@@ -1,6 +1,7 @@
 package com.satset.mooc.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -31,7 +32,7 @@ public class Student {
     private String password;
 
     @Column(name = "timestamp")
-    private Timestamp created_at;
+    private Timestamp createdAt;
 
 //    @Column(name = "token", unique = true)
 //    private String token;
@@ -45,7 +46,7 @@ public class Student {
         this.image = image;
         this.email = email;
         this.password = password;
-        this.created_at = new Timestamp(System.currentTimeMillis());
+        this.createdAt = new Timestamp(System.currentTimeMillis());
 //        this.token = token;
     }
 
@@ -69,12 +70,12 @@ public class Student {
         this.image = image;
     }
 
-    public Timestamp getCreated_at() {
-        return created_at;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated_at(Timestamp created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(Timestamp created_at) {
+        this.createdAt = createdAt;
     }
 
 //    public String getToken() {

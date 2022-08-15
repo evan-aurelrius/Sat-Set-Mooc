@@ -1,11 +1,11 @@
 package com.satset.mooc.controller;
 
+import com.satset.mooc.model.JwtResponse;
 import com.satset.mooc.model.dto.AdminDto;
 import com.satset.mooc.service.AdminService;
 import com.satset.mooc.service.CourseService;
 import com.satset.mooc.service.InstructorService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.satset.mooc.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,14 +26,12 @@ public class AdminController {
     @Autowired
     CourseService courseService;
 
-    Logger logger = LoggerFactory.getLogger(AdminController.class);
-    private String msg = "";
+    @Autowired
+    UserUtil userUtil;
 
     @PostMapping("/api/admin-login")
-    public ResponseEntity<String> authenticateAccount(@RequestBody AdminDto adminDto) {
-        var isExist = adminService.authenticate(adminDto.getEmail(), adminDto.getPassword());
-        if(isExist) return new ResponseEntity<>(HttpStatus.ACCEPTED);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<JwtResponse> authenticateAccount(@RequestBody AdminDto adminDto) {
+        return ResponseEntity.ok(userUtil.getJwt(adminDto));
     }
 
     @PostMapping("/api/verify-instructor")

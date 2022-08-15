@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@RequestMapping("/api")
 @RestController
 public class QuizController {
 
@@ -22,7 +23,13 @@ public class QuizController {
 
     private ModelMapper modelMapper= MapperUtil.getInstance();
 
-    @PostMapping("/api/course/{course_id}/quiz")
+//    @GetMapping("/quiz/{quiz_id}")
+//    public ResponseEntity<?> viewQuiz(@PathVariable("quiz_id") long quiz_id) {
+//
+//    }
+
+
+    @PostMapping("/course/{course_id}/quiz")
     public ResponseEntity<String> addQuiz(@PathVariable("course_id") long course_id, @RequestBody QuizDto quizDto) {
         Course course = courseService.getCourseById(course_id);
         if(course==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -32,7 +39,7 @@ public class QuizController {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
-    @PutMapping("/api/quiz/{quiz_id}")
+    @PutMapping("/quiz/{quiz_id}")
     public ResponseEntity<String> modifyQuiz(@PathVariable("quiz_id") long quiz_id, @RequestBody QuizDto quizDto) {
         Course course = courseService.getCourseById(quiz_id);
         if(course==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -42,7 +49,7 @@ public class QuizController {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/api/quiz/{quiz_id}")
+    @DeleteMapping("/quiz/{quiz_id}")
     public ResponseEntity<String> deleteQuiz(@PathVariable("quiz_id") long quiz_id) {
         quizService.delete(quiz_id);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);

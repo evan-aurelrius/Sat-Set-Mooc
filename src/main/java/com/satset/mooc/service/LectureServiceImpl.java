@@ -56,7 +56,6 @@ public class LectureServiceImpl implements LectureService{
 
     @Override
     public void deleteLecture(long id) {
-        Logger logger = LoggerFactory.getLogger(AdminController.class);
         Lecture lecture = getLectureById(id);
         if(lecture!=null){
             Course course = lecture.getCourse();
