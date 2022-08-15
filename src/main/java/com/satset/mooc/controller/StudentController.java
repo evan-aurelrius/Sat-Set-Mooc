@@ -1,7 +1,7 @@
 package com.satset.mooc.controller;
 
 import com.satset.mooc.model.Course;
-import com.satset.mooc.model.CourseDto;
+import com.satset.mooc.model.dto.CourseDto;
 import com.satset.mooc.security.service.UserDetailsImpl;
 import com.satset.mooc.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;

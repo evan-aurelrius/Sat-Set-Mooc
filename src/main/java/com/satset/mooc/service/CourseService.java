@@ -4,6 +4,7 @@ import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Instructor;
 import com.satset.mooc.model.Lecture;
 import com.satset.mooc.model.Quiz;
+import org.springframework.data.domain.Pageable;
 
 public interface CourseService {
 
