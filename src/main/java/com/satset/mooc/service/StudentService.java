@@ -1,6 +1,7 @@
 package com.satset.mooc.service;
 
 import com.satset.mooc.model.Course;
+import com.satset.mooc.model.Quiz;
 import com.satset.mooc.model.Student;
 
 public interface StudentService {
@@ -16,4 +17,6 @@ public interface StudentService {
     Student getStudentByEmail(String email);
 
     void addCourse(Student student, Course course);
+
+    Boolean quizEligibilityCheck(Student student, Quiz quiz);
 }

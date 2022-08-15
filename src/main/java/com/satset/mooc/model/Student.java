@@ -34,9 +34,6 @@ public class Student {
     @Column(name = "timestamp")
     private Timestamp createdAt;
 
-//    @Column(name = "token", unique = true)
-//    private String token;
-
     @ManyToMany(mappedBy = "students")
     private List<Course> enrolledClass = new LinkedList<>();
 
