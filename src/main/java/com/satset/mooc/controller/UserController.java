@@ -6,6 +6,7 @@ import com.satset.mooc.security.service.UserDetailsImpl;
 import com.satset.mooc.service.InstructorService;
 import com.satset.mooc.service.StudentService;
 import com.satset.mooc.util.MapperUtil;
+import com.satset.mooc.util.UserUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,15 +37,14 @@ public class UserController {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Autowired
+    UserUtil userUtil;
+
     private ModelMapper modelMapper= MapperUtil.getInstance();
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> authenticateUser(@RequestBody LoginRequest request){
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtUtils.generateJwtToken(authentication);
-        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
-        return ResponseEntity.ok(new JwtResponse(principal.getId(), principal.getName(), principal.getGender(), principal.getImage(), principal.getEmail(), principal.getRole(), principal.getCreatedAt(), token));
+        return ResponseEntity.ok(userUtil.getJwt(request));
     }
 
     @PostMapping("/register")
@@ -62,13 +62,7 @@ public class UserController {
             Instructor instructor = instructorService.registerInstructor(request.getName(), request.getGender(), request.getImage(), request.getEmail(), passwordEncoder.encode(request.getPassword()));
         }
 
-
 //        Login
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtUtils.generateJwtToken(authentication);
-        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
-
-        return ResponseEntity.ok(new JwtResponse(principal.getId(), principal.getName(), principal.getGender(), principal.getImage(), principal.getEmail(), principal.getRole(), principal.getCreatedAt(), token));
+        return ResponseEntity.ok(userUtil.getJwt(request));
     }
 }

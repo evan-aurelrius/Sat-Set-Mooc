@@ -26,4 +26,12 @@ public class JwtResponse implements Serializable {
         this.created_at = created_at;
         this.token = token;
     }
+
+    public JwtResponse(long id, String name, String email, String role, String token) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.role = role;
+        this.token = token;
+    }
 }

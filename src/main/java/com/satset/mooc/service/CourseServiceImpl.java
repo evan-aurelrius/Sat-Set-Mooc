@@ -1,9 +1,11 @@
 package com.satset.mooc.service;
 
+import com.satset.mooc.controller.AdminController;
 import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Instructor;
 import com.satset.mooc.model.Lecture;
 import com.satset.mooc.model.Quiz;
+import com.satset.mooc.model.response.InstructorCourseResponse;
 import com.satset.mooc.repository.CourseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,6 +35,9 @@ public class CourseServiceImpl implements CourseService{
     public Iterable<Course> getCourse(Pageable pageable) {
         return courseRepository.findAll(pageable);
     }
+
+    Logger logger = LoggerFactory.getLogger(AdminController.class);
+
 
     @Override
     public Course getCourseById(Long course_id) {
@@ -94,8 +100,16 @@ public class CourseServiceImpl implements CourseService{
         studentService.addCourse(student, course);
         course.addStudents(student);
         save(course);
-
     }
 
-
+    @Override
+    public List<InstructorCourseResponse> getCourseWithPagination(int page, long user_id) {
+        if(instructorService.getInstructorById(user_id)==null) return null;
+        List<Course> rawLst = courseRepository.findAll(PageRequest.of(page-1,10)).toList();
+        List<InstructorCourseResponse> responseList = new ArrayList<>();
+        for(Course c:rawLst) {
+            responseList.add(new InstructorCourseResponse(c.getId(), c.getTitle(), c.getImage(), c.getStudents().size(), c.getStatus()));
+        }
+        return responseList;
+    }
 }

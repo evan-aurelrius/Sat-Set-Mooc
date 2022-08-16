@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,6 +14,5 @@ public class InstructorCourseResponse {
     private String image;
     private long enrolled_student;
     private String status;
-    private Timestamp updated_at;
 
 }
