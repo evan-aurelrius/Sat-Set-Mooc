@@ -44,6 +44,10 @@ public class Quiz {
         return questions;
     }
 
+    public void addQuestion(Question question) {
+        this.questions.add(question);
+    }
+
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
     }

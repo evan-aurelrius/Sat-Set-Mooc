@@ -1,11 +1,8 @@
 package com.satset.mooc.service;
 
-import com.satset.mooc.controller.AdminController;
 import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Lecture;
 import com.satset.mooc.repository.LectureRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -45,8 +42,7 @@ public class LectureServiceImpl implements LectureService{
     }
 
     @Override
-    public void modify(long id, Lecture lecture) {
-        Lecture oldLecture = getLectureById(id);
+    public void modify(Lecture oldLecture, Lecture lecture) {
         if(oldLecture!=null) {
             oldLecture.setTitle(lecture.getTitle());
             oldLecture.setLink(lecture.getLink());
@@ -55,12 +51,11 @@ public class LectureServiceImpl implements LectureService{
     }
 
     @Override
-    public void deleteLecture(long id) {
-        Lecture lecture = getLectureById(id);
+    public void deleteLecture(Lecture lecture) {
         if(lecture!=null){
             Course course = lecture.getCourse();
             courseService.deleteLecture(course, lecture);
-            lectureRepository.deleteById(id);
+            lectureRepository.delete(lecture);
         }
     }
 

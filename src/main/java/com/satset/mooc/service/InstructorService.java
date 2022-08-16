@@ -1,8 +1,6 @@
 package com.satset.mooc.service;
 
-import com.satset.mooc.model.Course;
-import com.satset.mooc.model.Instructor;
-import com.satset.mooc.model.Quiz;
+import com.satset.mooc.model.*;
 
 public interface InstructorService {
 
@@ -21,4 +19,12 @@ public interface InstructorService {
     void addAndSaveCourse(Instructor instructor, Course course);
 
     Boolean quizEligibilityCheck(Instructor instructor, Quiz quiz);
+
+    Boolean lectureEligibilityViaCourseCheck(Instructor instructor, Course course);
+
+    Boolean lectureEligibilityCheck(Instructor instructor, Lecture oldLecture);
+
+    Boolean quizEligibilityViaCourseCheck(Instructor instructor, Course course);
+
+    Boolean questionEligibilityCheck(Instructor instructor, Question question);
 }

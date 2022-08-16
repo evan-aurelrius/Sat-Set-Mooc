@@ -11,4 +11,5 @@ public interface AdminService {
 
     void save(Admin admin);
 
+    Admin getAdminById(long admin_id);
 }

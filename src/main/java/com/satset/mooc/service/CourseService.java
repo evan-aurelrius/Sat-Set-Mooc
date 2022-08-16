@@ -4,6 +4,7 @@ import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Lecture;
 import com.satset.mooc.model.Quiz;
 import com.satset.mooc.model.response.InstructorCourseResponse;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public interface CourseService {
 
     void enroll(Long course_id, Long student_id);
 
-    List<InstructorCourseResponse> getCourseWithPagination(int page, long user_id);
+    Page<Course> getCourseWithPagination(int page, long user_id);
 
+    List<InstructorCourseResponse> convertToList(Page<Course> coursePage);
 }

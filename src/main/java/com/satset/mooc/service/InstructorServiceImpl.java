@@ -1,9 +1,6 @@
 package com.satset.mooc.service;
 
-import com.satset.mooc.model.Course;
-import com.satset.mooc.model.Instructor;
-import com.satset.mooc.model.Quiz;
-import com.satset.mooc.model.Student;
+import com.satset.mooc.model.*;
 import com.satset.mooc.repository.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +50,28 @@ public class InstructorServiceImpl implements InstructorService{
 
     @Override
     public Boolean quizEligibilityCheck(Instructor instructor, Quiz quiz) {
-        if(Boolean.FALSE.equals(instructor.getCourseOwned().contains(quiz.getCourse()))) return false;
-        return true;
+        return !Boolean.FALSE.equals(instructor.getCourseOwned().contains(quiz.getCourse()));
+    }
+
+    @Override
+    public Boolean lectureEligibilityViaCourseCheck(Instructor instructor, Course course) {
+        if(course==null) return false;
+        return !Boolean.FALSE.equals(instructor.getCourseOwned().contains(course));
+    }
+
+    @Override
+    public Boolean lectureEligibilityCheck(Instructor instructor, Lecture oldLecture) {
+        if(oldLecture==null) return false;
+        return !Boolean.FALSE.equals(instructor.getCourseOwned().contains(oldLecture.getCourse()));
+    }
+
+    @Override
+    public Boolean quizEligibilityViaCourseCheck(Instructor instructor, Course course) {
+        return !Boolean.FALSE.equals(instructor.getCourseOwned().contains(course));
+    }
+
+    @Override
+    public Boolean questionEligibilityCheck(Instructor instructor, Question question) {
+        return !Boolean.FALSE.equals(instructor.getCourseOwned().contains(question.getQuiz().getCourse()));
     }
 }

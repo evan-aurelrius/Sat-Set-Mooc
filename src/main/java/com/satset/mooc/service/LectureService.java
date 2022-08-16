@@ -14,8 +14,8 @@ public interface LectureService {
     void addAndSaveAllLectures(List<Lecture> lectures, Course course);
 
     void setAndSaveLecture(Lecture lectures, Course course);
-    void modify(long id, Lecture lecture);
+    void modify(Lecture oldLecture, Lecture lecture);
 
-    void deleteLecture(long id);
+    void deleteLecture(Lecture lecture);
 
 }

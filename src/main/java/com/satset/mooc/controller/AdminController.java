@@ -39,11 +39,9 @@ public class AdminController {
     }
 
     @PostMapping("/api/verify-instructor")
-    public ResponseEntity<String> verifyInstructor(@RequestBody Map<String, Object> request, Authentication authentication) {
-        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
-        long user_id = principal.getId();
-        Instructor instructor = instructorService.getInstructorById(user_id);
-        if(instructor==null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<String> verifyInstructor(@RequestBody Map<String, Object> request) {
+        Instructor instructor = instructorService.getInstructorById(Long.valueOf((Integer)request.get("user_id")));
+        if(instructor==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         String verified_status = (String) request.get("verified_status");
         instructorService.setInstuctorStatus(instructor, verified_status);
@@ -51,12 +49,12 @@ public class AdminController {
     }
 
     @PostMapping("/api/verify-course")
-    public ResponseEntity<String> verifyCourse(@RequestBody Map<String, Object> request, Authentication authentication) {
+    public ResponseEntity<String> verifyCourse(@RequestBody Map<String, Object> request) {
         Long course_id = Long.valueOf((Integer)request.get("course_id"));
         String verified_status = (String) request.get("verified_status");
         Course course = courseService.getCourseById(course_id);
-
         if(course==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
         courseService.setCourseStatus(course, verified_status);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }

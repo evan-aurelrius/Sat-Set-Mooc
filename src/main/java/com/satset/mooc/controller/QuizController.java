@@ -1,15 +1,10 @@
 package com.satset.mooc.controller;
 
-import com.satset.mooc.model.Course;
-import com.satset.mooc.model.Instructor;
-import com.satset.mooc.model.Quiz;
-import com.satset.mooc.model.Student;
+import com.satset.mooc.model.*;
+import com.satset.mooc.model.dto.QuestionDto;
 import com.satset.mooc.model.dto.QuizDto;
 import com.satset.mooc.security.service.UserDetailsImpl;
-import com.satset.mooc.service.CourseService;
-import com.satset.mooc.service.InstructorService;
-import com.satset.mooc.service.QuizService;
-import com.satset.mooc.service.StudentService;
+import com.satset.mooc.service.*;
 import com.satset.mooc.util.MapperUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +29,10 @@ public class QuizController {
     InstructorService instructorService;
     @Autowired
     QuizService quizService;
+    @Autowired
+    QuestionService questionService;
 
-    private ModelMapper modelMapper= MapperUtil.getInstance();
+    private final ModelMapper modelMapper= MapperUtil.getInstance();
 
     @GetMapping("/quiz/{quiz_id}")
     public ResponseEntity<?> viewQuiz(@PathVariable("quiz_id") long quiz_id, Authentication authentication) {
@@ -44,6 +41,8 @@ public class QuizController {
         long user_id = userDetails.getId();
         String role = userDetails.getRole();
         Quiz quiz = quizService.getQuizById(quiz_id);
+        if(quiz==null) return ResponseEntity.notFound().build();
+
         if(role.equals("student")) {
             Student student = studentService.getStudentById(user_id);
             isEligible = studentService.quizEligibilityCheck(student, quiz);
@@ -54,7 +53,7 @@ public class QuizController {
 
         if(Boolean.TRUE.equals(isEligible)) {
             HashMap<String, Object> map = new HashMap<>();
-            if(quiz!=null) map.put("data", quiz);
+            map.put("data", quiz);
             return ResponseEntity.ok(map);
         }
         return ResponseEntity.badRequest().build();
@@ -62,9 +61,14 @@ public class QuizController {
 
 
     @PostMapping("/course/{course_id}/quiz")
-    public ResponseEntity<String> addQuiz(@PathVariable("course_id") long course_id, @RequestBody QuizDto quizDto) {
+    public ResponseEntity<String> addQuiz(@PathVariable("course_id") long course_id, @RequestBody QuizDto quizDto, Authentication authentication) {
+        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
+        long user_id = principal.getId();
+        Instructor instructor = instructorService.getInstructorById(user_id);
+
         Course course = courseService.getCourseById(course_id);
         if(course==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(Boolean.FALSE.equals(instructorService.quizEligibilityViaCourseCheck(instructor,course))) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
         Quiz quiz = modelMapper.map(quizDto, Quiz.class);
         courseService.addQuiz(course, quiz);
@@ -72,20 +76,76 @@ public class QuizController {
     }
 
     @PutMapping("/quiz/{quiz_id}")
-    public ResponseEntity<String> modifyQuiz(@PathVariable("quiz_id") long quiz_id, @RequestBody QuizDto quizDto) {
-        Course course = courseService.getCourseById(quiz_id);
-        if(course==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<String> modifyQuiz(@PathVariable("quiz_id") long quiz_id, @RequestBody QuizDto quizDto, Authentication authentication) {
+        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
+        long user_id = principal.getId();
+        Instructor instructor = instructorService.getInstructorById(user_id);
+
+        Quiz oldQuiz = quizService.getQuizById(quiz_id);
+        if(oldQuiz==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(Boolean.FALSE.equals(instructorService.quizEligibilityCheck(instructor,oldQuiz))) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
         Quiz quiz = modelMapper.map(quizDto, Quiz.class);
-        quizService.modify(quiz_id, quiz);
+        quizService.modify(oldQuiz, quiz);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/quiz/{quiz_id}")
-    public ResponseEntity<String> deleteQuiz(@PathVariable("quiz_id") long quiz_id) {
-        quizService.delete(quiz_id);
+    public ResponseEntity<String> deleteQuiz(@PathVariable("quiz_id") long quiz_id, Authentication authentication) {
+        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
+        long user_id = principal.getId();
+        Instructor instructor = instructorService.getInstructorById(user_id);
+
+        Quiz quiz = quizService.getQuizById(quiz_id);
+        if(quiz==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(Boolean.FALSE.equals(instructorService.quizEligibilityCheck(instructor,quiz))) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        quizService.delete(quiz);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
+    @PostMapping("/quiz/{quiz_id}/question")
+    public ResponseEntity<String> addQuestion(@PathVariable("quiz_id") long quiz_id, @RequestBody QuestionDto questionDto, Authentication authentication) {
+        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
+        long user_id = principal.getId();
+        Instructor instructor = instructorService.getInstructorById(user_id);
+
+        Quiz quiz = quizService.getQuizById(quiz_id);
+        if(quiz==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(Boolean.FALSE.equals(instructorService.quizEligibilityCheck(instructor,quiz))) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        Question question = modelMapper.map(questionDto, Question.class);
+        quizService.addQuestion(quiz, question);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/question/{question_id}")
+    public ResponseEntity<String> modifyQuestion(@PathVariable("question_id") long question_id, @RequestBody QuestionDto questionDto, Authentication authentication) {
+        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
+        long user_id = principal.getId();
+        Instructor instructor = instructorService.getInstructorById(user_id);
+
+        Question oldQuestion = questionService.getQuestionById(question_id);
+        if(oldQuestion==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(Boolean.FALSE.equals(instructorService.questionEligibilityCheck(instructor,oldQuestion))) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        Question question = modelMapper.map(questionDto, Question.class);
+        questionService.modifyQuestion(oldQuestion, question);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping("/question/{question_id}")
+    public ResponseEntity<String> deleteQuestion(@PathVariable("question_id") long question_id, Authentication authentication) {
+        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
+        long user_id = principal.getId();
+        Instructor instructor = instructorService.getInstructorById(user_id);
+
+        Question question = questionService.getQuestionById(question_id);
+        if(question==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(Boolean.FALSE.equals(instructorService.questionEligibilityCheck(instructor,question))) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        questionService.delete(question);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
 
 }

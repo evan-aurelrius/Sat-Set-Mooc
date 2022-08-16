@@ -7,6 +7,7 @@ import com.satset.mooc.repository.CourseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -100,9 +101,15 @@ public class CourseServiceImpl implements CourseService{
     }
 
     @Override
-    public List<InstructorCourseResponse> getCourseWithPagination(int page, long user_id) {
+    public Page<Course> getCourseWithPagination(int page, long user_id) {
         if(instructorService.getInstructorById(user_id)==null) return null;
-        List<Course> rawLst = courseRepository.findAll(PageRequest.of(page-1,10)).toList();
+        return courseRepository.findAll(PageRequest.of(page-1,10));
+
+    }
+
+    @Override
+    public List<InstructorCourseResponse> convertToList(Page<Course> coursePage) {
+        List<Course> rawLst = coursePage.toList();
         List<InstructorCourseResponse> responseList = new ArrayList<>();
         for(Course c:rawLst) {
             responseList.add(new InstructorCourseResponse(c.getId(), c.getTitle(), c.getImage(), c.getStudents().size(), c.getStatus()));

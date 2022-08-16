@@ -15,4 +15,13 @@ public interface QuestionService {
 
     void saveAll(List<Question> questions);
 
+    void setAndSave(Question question, Quiz quiz);
+
+    void save(Question question);
+
+    Question getQuestionById(long id);
+
+    void modifyQuestion(Question oldQuestion, Question question);
+
+    void delete(Question question);
 }

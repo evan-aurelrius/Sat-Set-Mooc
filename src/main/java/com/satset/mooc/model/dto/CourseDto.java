@@ -21,7 +21,6 @@ import java.util.Set;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CourseDto {
 
-    private long user_id;
     private long id;
 
     private String title;
