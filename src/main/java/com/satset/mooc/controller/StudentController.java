@@ -22,7 +22,7 @@ public class StudentController {
     CourseService courseService;
 
     @PostMapping("/enroll")
-    public ResponseEntity<String> onrollCourse(@RequestBody CourseDto courseDto, Authentication authentication) {
+    public ResponseEntity<String> enrollCourse(@RequestBody CourseDto courseDto, Authentication authentication) {
         Course course = courseService.getCourseById(courseDto.getId());
         if(course==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
