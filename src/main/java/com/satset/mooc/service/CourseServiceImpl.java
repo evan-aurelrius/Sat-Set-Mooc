@@ -1,11 +1,9 @@
 package com.satset.mooc.service;
 
-import com.satset.mooc.controller.AdminController;
 import com.satset.mooc.model.*;
+import com.satset.mooc.model.response.CourseResponse;
 import com.satset.mooc.model.response.InstructorCourseResponse;
 import com.satset.mooc.repository.CourseRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,9 +31,6 @@ public class CourseServiceImpl implements CourseService{
     public Iterable<Course> getCourse(Pageable pageable) {
         return courseRepository.findAll(pageable);
     }
-
-    Logger logger = LoggerFactory.getLogger(AdminController.class);
-
 
     @Override
     public Course getCourseById(Long course_id) {
@@ -96,7 +91,8 @@ public class CourseServiceImpl implements CourseService{
         Student student = studentService.getStudentById(student_id);
         Course course = courseRepository.findById(course_id).orElse(null);
         studentService.addCourse(student, course);
-        course.addStudents(student);
+        if(course!=null)
+            course.addStudents(student);
         save(course);
     }
 
@@ -104,7 +100,16 @@ public class CourseServiceImpl implements CourseService{
     public Page<Course> getCourseWithPagination(int page, long user_id) {
         if(instructorService.getInstructorById(user_id)==null) return null;
         return courseRepository.findAll(PageRequest.of(page-1,10));
+    }
 
+    @Override
+    public List<CourseResponse> getAllCourseWithPagination(int page) {
+        List<Course> rawLst = courseRepository.findAll(PageRequest.of(page-1,10)).toList();
+        List<CourseResponse> responseList = new ArrayList<>();
+        for(Course c:rawLst) {
+            responseList.add(new CourseResponse(c.getId(), c.getTitle(), c.getImage(), c.getStudents().size(), c.getInstructor().getName()));
+        }
+        return responseList;
     }
 
     @Override
