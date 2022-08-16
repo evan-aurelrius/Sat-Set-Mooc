@@ -33,7 +33,7 @@ public class CourseController {
 
     private ModelMapper modelMapper= MapperUtil.getInstance();
 
-    @GetMapping("/course/{page}/")
+    @GetMapping("/courses/{page}")
     public ResponseEntity<?> getCourse(@PathVariable("page") int page) {
         if(page<1) return ResponseEntity.badRequest().build();
         List<CourseResponse> courses = courseService.getAllCourseWithPagination(page);
