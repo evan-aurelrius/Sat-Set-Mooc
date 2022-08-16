@@ -1,7 +1,10 @@
 package com.satset.mooc.controller;
 
+import com.satset.mooc.model.Course;
+import com.satset.mooc.model.Instructor;
 import com.satset.mooc.model.JwtResponse;
 import com.satset.mooc.model.dto.AdminDto;
+import com.satset.mooc.security.service.UserDetailsImpl;
 import com.satset.mooc.service.AdminService;
 import com.satset.mooc.service.CourseService;
 import com.satset.mooc.service.InstructorService;
@@ -9,6 +12,7 @@ import com.satset.mooc.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,21 +39,22 @@ public class AdminController {
     }
 
     @PostMapping("/api/verify-instructor")
-    public ResponseEntity<String> verifyInstructor(@RequestBody Map<String, Object> request) {
-        var user_id = Long.valueOf((Integer)request.get("user_id"));
-        var verified_status = (String) request.get("verified_status");
-        var instructor = instructorService.getInstructorById(user_id);
+    public ResponseEntity<String> verifyInstructor(@RequestBody Map<String, Object> request, Authentication authentication) {
+        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
+        long user_id = principal.getId();
+        Instructor instructor = instructorService.getInstructorById(user_id);
+        if(instructor==null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
-        if(instructor==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        String verified_status = (String) request.get("verified_status");
         instructorService.setInstuctorStatus(instructor, verified_status);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/api/verify-course")
-    public ResponseEntity<String> verifyCourse(@RequestBody Map<String, Object> request) {
-        var course_id = Long.valueOf((Integer)request.get("course_id"));
-        var verified_status = (String) request.get("verified_status");
-        var course = courseService.getCourseById(course_id);
+    public ResponseEntity<String> verifyCourse(@RequestBody Map<String, Object> request, Authentication authentication) {
+        Long course_id = Long.valueOf((Integer)request.get("course_id"));
+        String verified_status = (String) request.get("verified_status");
+        Course course = courseService.getCourseById(course_id);
 
         if(course==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         courseService.setCourseStatus(course, verified_status);

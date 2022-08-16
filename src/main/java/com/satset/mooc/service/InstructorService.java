@@ -2,6 +2,7 @@ package com.satset.mooc.service;
 
 import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Instructor;
+import com.satset.mooc.model.Quiz;
 
 public interface InstructorService {
 
@@ -19,4 +20,5 @@ public interface InstructorService {
 
     void addAndSaveCourse(Instructor instructor, Course course);
 
+    Boolean quizEligibilityCheck(Instructor instructor, Quiz quiz);
 }

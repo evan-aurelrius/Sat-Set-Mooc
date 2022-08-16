@@ -35,9 +35,6 @@ public class UserController {
     PasswordEncoder passwordEncoder;
 
     @Autowired
-    JwtUtils jwtUtils;
-
-    @Autowired
     UserUtil userUtil;
 
     private ModelMapper modelMapper= MapperUtil.getInstance();
@@ -63,6 +60,7 @@ public class UserController {
         }
 
 //        Login
-        return ResponseEntity.ok(userUtil.getJwt(request));
+        LoginRequest loginRequest = new LoginRequest(request.getEmail(), request.getPassword());
+        return ResponseEntity.ok(userUtil.getJwt(loginRequest));
     }
 }

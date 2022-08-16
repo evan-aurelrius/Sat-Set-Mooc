@@ -1,11 +1,13 @@
 package com.satset.mooc.controller;
 
 import com.satset.mooc.model.Course;
+import com.satset.mooc.model.Instructor;
 import com.satset.mooc.model.Quiz;
 import com.satset.mooc.model.Student;
 import com.satset.mooc.model.dto.QuizDto;
 import com.satset.mooc.security.service.UserDetailsImpl;
 import com.satset.mooc.service.CourseService;
+import com.satset.mooc.service.InstructorService;
 import com.satset.mooc.service.QuizService;
 import com.satset.mooc.service.StudentService;
 import com.satset.mooc.util.MapperUtil;
@@ -21,7 +23,7 @@ import java.util.HashMap;
 
 @RequestMapping("/api")
 @RestController
-//@PreAuthorize("isAuthenticated()")
+@PreAuthorize("isAuthenticated()")
 public class QuizController {
 
     @Autowired
@@ -29,20 +31,33 @@ public class QuizController {
     @Autowired
     StudentService studentService;
     @Autowired
+    InstructorService instructorService;
+    @Autowired
     QuizService quizService;
 
     private ModelMapper modelMapper= MapperUtil.getInstance();
 
     @GetMapping("/quiz/{quiz_id}")
     public ResponseEntity<?> viewQuiz(@PathVariable("quiz_id") long quiz_id, Authentication authentication) {
-//        TODO: Only Student authorized to view quiz
-//        long user_id = ((UserDetailsImpl)authentication.getPrincipal()).getId();
-//        if(studentService.getStudentById(user_id) != null) return ResponseEntity.badRequest().build();
-
-        HashMap<String, Object> map = new HashMap<>();
+        boolean isEligible;
+        UserDetailsImpl userDetails = (UserDetailsImpl)authentication.getPrincipal();
+        long user_id = userDetails.getId();
+        String role = userDetails.getRole();
         Quiz quiz = quizService.getQuizById(quiz_id);
-        if(quiz!=null) map.put("data", quiz);
-        return ResponseEntity.ok(map);
+        if(role.equals("student")) {
+            Student student = studentService.getStudentById(user_id);
+            isEligible = studentService.quizEligibilityCheck(student, quiz);
+        } else if(role.equals("instructor")) {
+            Instructor instructor = instructorService.getInstructorById(user_id);
+            isEligible = instructorService.quizEligibilityCheck(instructor, quiz);
+        } else isEligible = false;
+
+        if(Boolean.TRUE.equals(isEligible)) {
+            HashMap<String, Object> map = new HashMap<>();
+            if(quiz!=null) map.put("data", quiz);
+            return ResponseEntity.ok(map);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
 

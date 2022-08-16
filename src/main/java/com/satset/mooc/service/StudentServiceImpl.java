@@ -1,6 +1,7 @@
 package com.satset.mooc.service;
 
 import com.satset.mooc.model.Course;
+import com.satset.mooc.model.Quiz;
 import com.satset.mooc.model.Student;
 import com.satset.mooc.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     StudentRepository studentRepository;
+    @Autowired
+    StudentQuizService studentQuizService;
 
     @Override
     public Student registerStudent(String name, String gender, String image, String email, String password) {
@@ -41,5 +44,11 @@ public class StudentServiceImpl implements StudentService {
     public void addCourse(Student student, Course course) {
         student.addEnrolledClass(course);
         studentRepository.save(student);
+    }
+
+    @Override
+    public Boolean quizEligibilityCheck(Student student, Quiz quiz) {
+        if(Boolean.FALSE.equals(student.getEnrolledClass().contains(quiz.getCourse()))) return false;
+        return !Boolean.FALSE.equals(studentQuizService.quizAvailable(student, quiz));
     }
 }

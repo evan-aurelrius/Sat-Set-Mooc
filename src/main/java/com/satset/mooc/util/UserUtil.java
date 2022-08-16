@@ -2,6 +2,7 @@ package com.satset.mooc.util;
 
 import com.satset.mooc.model.JwtResponse;
 import com.satset.mooc.model.LoginRequest;
+import com.satset.mooc.model.SignupRequest;
 import com.satset.mooc.model.dto.AdminDto;
 import com.satset.mooc.security.jwt.JwtUtils;
 import com.satset.mooc.security.service.UserDetailsImpl;
@@ -22,7 +23,9 @@ public class UserUtil {
 
     public <T> JwtResponse getJwt(T user) {
         Authentication authentication = null;
+        Boolean isAdmin = false;
         if(user instanceof AdminDto) {
+            isAdmin = true;
             AdminDto adminDto = (AdminDto) user;
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(adminDto.getEmail(), adminDto.getPassword()));
         } else {
@@ -33,7 +36,12 @@ public class UserUtil {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtUtils.generateJwtToken(authentication);
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
-        return new JwtResponse(principal.getId(), principal.getName(), principal.getEmail(), principal.getRole(), token);
+
+        if(Boolean.TRUE.equals(isAdmin)) {
+            return new JwtResponse(principal.getId(), principal.getName(), principal.getEmail(), principal.getRole(), token);
+        } else {
+            return new JwtResponse(principal.getId(), principal.getName(), principal.getGender(), principal.getImage(), principal.getEmail(), principal.getRole(), principal.getCreatedAt(), token);
+        }
     }
 
 }

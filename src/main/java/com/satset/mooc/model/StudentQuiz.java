@@ -13,10 +13,11 @@ public class StudentQuiz {
     private StudentQuizKey studentQuizKey;
 
     @Column(name = "")
-    private int score = -1;
+    private int score;
 
     public StudentQuiz(StudentQuizKey studentQuizKey) {
         this.studentQuizKey = studentQuizKey;
+        this.score = -1;
     }
 
     public StudentQuizKey getStudentQuizKey() {

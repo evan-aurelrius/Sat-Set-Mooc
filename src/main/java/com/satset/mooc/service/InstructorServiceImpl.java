@@ -2,6 +2,7 @@ package com.satset.mooc.service;
 
 import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Instructor;
+import com.satset.mooc.model.Quiz;
 import com.satset.mooc.model.Student;
 import com.satset.mooc.repository.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +49,11 @@ public class InstructorServiceImpl implements InstructorService{
     public void addAndSaveCourse(Instructor instructor, Course course) {
         instructor.addCourseOwned(course);
         save(instructor);
+    }
+
+    @Override
+    public Boolean quizEligibilityCheck(Instructor instructor, Quiz quiz) {
+        if(Boolean.FALSE.equals(instructor.getCourseOwned().contains(quiz.getCourse()))) return false;
+        return true;
     }
 }
