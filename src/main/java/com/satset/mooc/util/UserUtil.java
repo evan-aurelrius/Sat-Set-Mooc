@@ -2,6 +2,7 @@ package com.satset.mooc.util;
 
 import com.satset.mooc.model.JwtResponse;
 import com.satset.mooc.model.LoginRequest;
+import com.satset.mooc.model.SignupRequest;
 import com.satset.mooc.model.dto.AdminDto;
 import com.satset.mooc.security.jwt.JwtUtils;
 import com.satset.mooc.security.service.UserDetailsImpl;
@@ -26,7 +27,7 @@ public class UserUtil {
             AdminDto adminDto = (AdminDto) user;
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(adminDto.getEmail(), adminDto.getPassword()));
         } else {
-            LoginRequest loginRequest = (LoginRequest) user;
+            SignupRequest loginRequest = (SignupRequest) user;
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         }
 
