@@ -1,5 +1,6 @@
 package com.satset.mooc.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ public class JwtResponse implements Serializable {
     private String email;
     private String role;
     private Timestamp created_at;
+    @JsonIgnore
     private String token;
 
     public JwtResponse(long id, String name, String gender, String image, String email, String role, Timestamp created_at, String token) {
