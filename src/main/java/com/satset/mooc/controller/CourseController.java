@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-//@PreAuthorize("isAuthenticated()")
 @RequestMapping("/api")
 public class CourseController {
 

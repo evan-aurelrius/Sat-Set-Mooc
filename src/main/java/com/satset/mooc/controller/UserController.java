@@ -60,6 +60,7 @@ public class UserController {
         }
 
 //        Login
-        return ResponseEntity.ok(userUtil.getJwt(request));
+        LoginRequest loginRequest = new LoginRequest(request.getEmail(), request.getPassword());
+        return ResponseEntity.ok(userUtil.getJwt(loginRequest));
     }
 }

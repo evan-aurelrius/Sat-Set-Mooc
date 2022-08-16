@@ -23,18 +23,25 @@ public class UserUtil {
 
     public <T> JwtResponse getJwt(T user) {
         Authentication authentication = null;
+        Boolean isAdmin = false;
         if(user instanceof AdminDto) {
+            isAdmin = true;
             AdminDto adminDto = (AdminDto) user;
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(adminDto.getEmail(), adminDto.getPassword()));
         } else {
-            SignupRequest loginRequest = (SignupRequest) user;
+            LoginRequest loginRequest = (LoginRequest) user;
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtUtils.generateJwtToken(authentication);
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
-        return new JwtResponse(principal.getId(), principal.getName(), principal.getEmail(), principal.getRole(), token);
+
+        if(Boolean.TRUE.equals(isAdmin)) {
+            return new JwtResponse(principal.getId(), principal.getName(), principal.getEmail(), principal.getRole(), token);
+        } else {
+            return new JwtResponse(principal.getId(), principal.getName(), principal.getGender(), principal.getImage(), principal.getEmail(), principal.getRole(), principal.getCreatedAt(), token);
+        }
     }
 
 }
