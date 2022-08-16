@@ -32,8 +32,7 @@ public class WebSecurityConfig {
                 .and().authorizeRequests()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/register").permitAll()
-                .antMatchers("/api/**").permitAll()
-                .anyRequest().authenticated();
+                .antMatchers("/api/**").fullyAuthenticated();
         http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
