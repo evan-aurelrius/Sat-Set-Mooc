@@ -31,7 +31,7 @@ public class WebSecurityConfig {
                 .authenticationEntryPoint(unauthorizedHandler)
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests()
-                .antMatchers(HttpMethod.GET,"/api/course/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/courses/**").permitAll()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/register").permitAll()
                 .anyRequest().fullyAuthenticated();
