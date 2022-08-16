@@ -37,6 +37,9 @@ public class Student {
     @ManyToMany(mappedBy = "students")
     private List<Course> enrolledClass = new LinkedList<>();
 
+    @ManyToMany(mappedBy = "students")
+    private List<Lecture> lectures = new LinkedList<>();
+
     public Student(String name, String gender, String image, String email, String password) {
         this.name = name;
         this.gender = gender;
@@ -44,7 +47,6 @@ public class Student {
         this.email = email;
         this.password = password;
         this.createdAt = new Timestamp(System.currentTimeMillis());
-//        this.token = token;
     }
 
     public long getId() {
@@ -74,14 +76,6 @@ public class Student {
     public void setCreatedAt(Timestamp created_at) {
         this.createdAt = createdAt;
     }
-
-//    public String getToken() {
-//        return token;
-//    }
-//
-//    public void setToken(String token) {
-//        this.token = token;
-//    }
 
     public List<Course> getEnrolledClass() {
         return enrolledClass;
@@ -117,5 +111,13 @@ public class Student {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Lecture> getLectures() {
+        return lectures;
+    }
+
+    public void setLectures(List<Lecture> lectures) {
+        this.lectures = lectures;
     }
 }

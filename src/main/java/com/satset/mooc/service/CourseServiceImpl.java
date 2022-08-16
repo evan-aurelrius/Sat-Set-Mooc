@@ -2,7 +2,9 @@ package com.satset.mooc.service;
 
 import com.satset.mooc.controller.AdminController;
 import com.satset.mooc.model.*;
+import com.satset.mooc.model.response.CourseResponse;
 import com.satset.mooc.model.response.InstructorCourseResponse;
+import com.satset.mooc.model.response.StudentCourseResponse;
 import com.satset.mooc.repository.CourseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,6 +108,27 @@ public class CourseServiceImpl implements CourseService{
         List<InstructorCourseResponse> responseList = new ArrayList<>();
         for(Course c:rawLst) {
             responseList.add(new InstructorCourseResponse(c.getId(), c.getTitle(), c.getImage(), c.getStudents().size(), c.getStatus()));
+        }
+        return responseList;
+    }
+
+    @Override
+    public List<StudentCourseResponse> getStudentCourseWithPagination(int page, long user_id) {
+        if(studentService.getStudentById(user_id)==null) return null;
+        List<Course> rawLst = courseRepository.findAll(PageRequest.of(page-1,10)).toList();
+        List<StudentCourseResponse> responseList = new ArrayList<>();
+        for(Course c:rawLst) {
+            responseList.add(new StudentCourseResponse(c.getId(), c.getTitle(), c.getImage(), c.getInstructor().getName(), (c.getLectures().size()+c.getQuizzes().size()), 0));
+        }
+        return responseList;
+    }
+
+    @Override
+    public List<CourseResponse> getAllCourseWithPagination(int page) {
+        List<Course> rawLst = courseRepository.findAll(PageRequest.of(page-1,10)).toList();
+        List<CourseResponse> responseList = new ArrayList<>();
+        for(Course c:rawLst) {
+            responseList.add(new CourseResponse(c.getId(), c.getTitle(), c.getImage(), c.getStudents().size(), c.getInstructor().getName()));
         }
         return responseList;
     }

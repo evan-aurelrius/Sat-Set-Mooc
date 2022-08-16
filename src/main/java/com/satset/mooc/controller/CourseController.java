@@ -2,7 +2,9 @@ package com.satset.mooc.controller;
 
 import com.satset.mooc.model.Course;
 import com.satset.mooc.model.dto.CourseDto;
+import com.satset.mooc.model.response.CourseResponse;
 import com.satset.mooc.model.response.InstructorCourseResponse;
+import com.satset.mooc.model.response.StudentCourseResponse;
 import com.satset.mooc.service.CourseService;
 import com.satset.mooc.util.MapperUtil;
 import org.modelmapper.ModelMapper;
@@ -30,6 +32,22 @@ public class CourseController {
     CourseService courseService;
 
     private ModelMapper modelMapper= MapperUtil.getInstance();
+
+    @GetMapping("/course/{page}/")
+    public ResponseEntity<?> getCourse(@PathVariable("page") int page) {
+        if(page<1) return ResponseEntity.badRequest().build();
+        List<CourseResponse> courses = courseService.getAllCourseWithPagination(page);
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("data", courses);
+        map.put("next", "/api/mycourse/%d/".formatted(page+1));
+        if(page>1)
+            map.put("prev", "/api/mycourse/%d/".formatted(page-1));
+        else
+            map.put("prev","");
+
+        return ResponseEntity.ok(map);
+    }
 
     @PostMapping("/course")
     public ResponseEntity<String> createCourse(@RequestBody CourseDto courseDto) {

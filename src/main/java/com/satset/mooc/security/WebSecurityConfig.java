@@ -5,6 +5,7 @@ import com.satset.mooc.security.jwt.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -30,10 +31,10 @@ public class WebSecurityConfig {
                 .authenticationEntryPoint(unauthorizedHandler)
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests()
+                .antMatchers(HttpMethod.GET,"/api/course/**").permitAll()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/register").permitAll()
-                .antMatchers("/api/**").fullyAuthenticated()
-                .anyRequest().authenticated();
+                .anyRequest().fullyAuthenticated();
         http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
