@@ -31,6 +31,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         try {
+            ((HttpServletResponse) response).addHeader("Access-Control-Allow-Origin", "*");
+
             String jwt = parseJwt(request);
             if (jwt != null
                     && jwtUtils.validateJwtToken(jwt)) {

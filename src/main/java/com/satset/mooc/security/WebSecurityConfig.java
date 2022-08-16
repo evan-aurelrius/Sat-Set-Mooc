@@ -34,7 +34,7 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.GET,"/api/course/**").permitAll()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/register").permitAll()
-                .antMatchers("/api/**").fullyAuthenticated();
+                .anyRequest().fullyAuthenticated();
         http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
