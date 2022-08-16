@@ -3,6 +3,7 @@ package com.satset.mooc.service;
 import com.satset.mooc.model.*;
 import com.satset.mooc.model.response.CourseResponse;
 import com.satset.mooc.model.response.InstructorCourseResponse;
+import com.satset.mooc.model.response.StudentCourseResponse;
 import com.satset.mooc.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -100,6 +101,17 @@ public class CourseServiceImpl implements CourseService{
     public Page<Course> getCourseWithPagination(int page, long user_id) {
         if(instructorService.getInstructorById(user_id)==null) return null;
         return courseRepository.findAll(PageRequest.of(page-1,10));
+    }
+
+    @Override
+    public List<StudentCourseResponse> getStudentCourseWithPagination(int page, long user_id) {
+        if(studentService.getStudentById(user_id)==null) return null;
+        List<Course> rawLst = courseRepository.findAll(PageRequest.of(page-1,10)).toList();
+        List<StudentCourseResponse> responseList = new ArrayList<>();
+        for(Course c:rawLst) {
+            responseList.add(new StudentCourseResponse(c.getId(), c.getTitle(), c.getImage(), c.getInstructor().getName(), (c.getLectures().size()+c.getQuizzes().size()), 0));
+        }
+        return responseList;
     }
 
     @Override

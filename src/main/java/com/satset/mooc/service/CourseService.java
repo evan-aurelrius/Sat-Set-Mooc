@@ -36,6 +36,8 @@ public interface CourseService {
 
     Page<Course> getCourseWithPagination(int page, long user_id);
 
+    List<StudentCourseResponse> getStudentCourseWithPagination(int page, long user_id);
+
     List<CourseResponse> getAllCourseWithPagination(int page);
 
     List<InstructorCourseResponse> convertToList(Page<Course> coursePage);
