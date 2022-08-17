@@ -37,17 +37,6 @@ public class StudentController {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
-    @PostMapping("/quiz/{course_id}")
-    public ResponseEntity<String> takeQuiz(Authentication authentication, @PathVariable("course_id") long course_id, @RequestBody CourseDto courseDto) {
-        Course course = courseService.getCourseById(courseDto.getId());
-        if(course==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
-        courseService.enroll(courseDto.getId(), principal.getId());
-
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
-    }
-
     @GetMapping("/enrolled-course/{page}")
     public ResponseEntity<?> getEnrolledCourse(@PathVariable("page") int page, Authentication authentication) {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
