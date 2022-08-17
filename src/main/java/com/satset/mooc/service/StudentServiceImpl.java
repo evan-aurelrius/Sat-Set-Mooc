@@ -14,9 +14,12 @@ public class StudentServiceImpl implements StudentService {
     StudentRepository studentRepository;
     @Autowired
     StudentQuizService studentQuizService;
+    @Autowired
+    DailyNewUserService dailyNewUserService;
 
     @Override
     public Student registerStudent(String name, String gender, String image, String email, String password) {
+        dailyNewUserService.setDailyNewUser(true,true);
         return studentRepository.save(new Student(name, gender, image, email, password));
     }
 

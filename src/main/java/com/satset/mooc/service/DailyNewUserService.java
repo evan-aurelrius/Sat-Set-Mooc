@@ -9,4 +9,6 @@ public interface DailyNewUserService {
     LinkedList<DailyNewUserResponse> getDailyNewUser();
 
     Long countDaysDifferent(LocalDate latestData);
+
+    void setDailyNewUser(Boolean isStudent, Boolean increment);
 }

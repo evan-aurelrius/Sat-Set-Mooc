@@ -14,9 +14,12 @@ public class InstructorServiceImpl implements InstructorService{
     InstructorRepository instructorRepository;
     @Autowired
     InstructorDashboardRepository instructorDashboardRepository;
+    @Autowired
+    DailyNewUserService dailyNewUserService;
 
     @Override
     public Instructor registerInstructor(String name, String gender, String image, String email, String password) {
+        dailyNewUserService.setDailyNewUser(false, true);
         return instructorRepository.save(new Instructor(name, gender, image, email, password));
     }
 
@@ -39,6 +42,7 @@ public class InstructorServiceImpl implements InstructorService{
     public Boolean setInstructorStatus(Instructor instructor, String status) {
         if(!instructor.getVerified_status().equalsIgnoreCase("Approved")) {
             if(status.equalsIgnoreCase("Rejected")) {
+                dailyNewUserService.setDailyNewUser(false, false);
                 delete(instructor);
                 return true;
             }

@@ -28,22 +28,16 @@ public class InitializeSqlDataServiceImpl implements InitializeSqlDataService{
     @Autowired
     DailyNewUserRepository dailyNewUserRepository;
     @Autowired
-    CourseRepository courseRepository;
-    @Autowired
-    QuestionRepository questionRepository;
-    @Autowired
-    LectureRepository lectureRepository;
-    @Autowired
-    QuizRepository quizRepository;
+    StudentService studentService;
 
 
     @Override
     public void quickInitialize() {
         if(adminRepository.count()==0) {
+            initializeDailyNewUser();
             initializeAdmin();
             initializeInstructor();
             initializeStudent();
-            initializeDailyNewUser();
         }
     }
 
@@ -65,7 +59,6 @@ public class InitializeSqlDataServiceImpl implements InitializeSqlDataService{
     }
 
     private void initializeStudent() {
-        Student student1 = new Student("Timmy","m","profile2.jpg","timmyadventure@gmail.com",passwordEncoder.encode("timmy123"));
-        studentRepository.save(student1);
+        studentService.registerStudent("Timmy","m","profile2.jpg","timmyadventure@gmail.com",passwordEncoder.encode("timmy123"));
     }
 }
