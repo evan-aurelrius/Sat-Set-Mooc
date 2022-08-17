@@ -2,6 +2,7 @@ package com.satset.mooc.service;
 
 import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Lecture;
+import com.satset.mooc.model.Student;
 import com.satset.mooc.repository.LectureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -16,6 +17,8 @@ public class LectureServiceImpl implements LectureService{
     LectureRepository lectureRepository;
     @Autowired @Lazy
     CourseService courseService;
+    @Autowired
+    StudentService studentService;
 
     @Override
     public Lecture getLectureById(long id) {
@@ -57,6 +60,16 @@ public class LectureServiceImpl implements LectureService{
             courseService.deleteLecture(course, lecture);
             lectureRepository.delete(lecture);
         }
+    }
+
+    @Override
+    public void addLectureProgress(long lecture_id, long student_id) {
+        Student student = studentService.getStudentById(student_id);
+        Lecture lecture = lectureRepository.findById(lecture_id).orElse(null);
+        studentService.addLecture(student, lecture);
+        if(lecture!=null)
+            lecture.addStudents(student);
+        save(lecture);
     }
 
 }

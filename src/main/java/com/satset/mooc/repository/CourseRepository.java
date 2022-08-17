@@ -30,6 +30,22 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "LIMIT 5", nativeQuery = true)
     List<Map<String, Object>> findTop5Course();
 
+    @Query(value = "SELECT course.id,\n" +
+            "course.title, \n" +
+            "course.image, \n" +
+            "instructor.name instructor_name,\n" +
+            "count(lecture.id+quiz.id) total_content,\n" +
+            "count(student_lecture.student_id+student_quiz.student_id) completed_content\n" +
+            "from course \n" +
+            "JOIN student_enroll_course on course.id = student_enroll_course.course_id\n" +
+            "JOIN lecture on course.id = lecture.course_id\n" +
+            "JOIN quiz on course.id = quiz.course_id\n" +
+            "LEFT JOIN student_lecture on course.id = student_lecture.course_id\n" +
+            "LEFT JOIN student_quiz on quiz.id = student_quiz.quiz_id\n" +
+            "JOIN instructor on course.instructor_id = course.id\n" +
+            "WHERE student_enroll_course.student_id = ?1 GROUP BY course.id, instructor.id", nativeQuery = true)
+    Page<Map<String, Object>> findAllStudentCourseWithPagination(long student_id, Pageable pageable);
+    
     @Query(nativeQuery = false, value = "select c from Course as c where c.status='Pending'")
     Page<Course> findAllByVerified_status(Pageable pageable);
 

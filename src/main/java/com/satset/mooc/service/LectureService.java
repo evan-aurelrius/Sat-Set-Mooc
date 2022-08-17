@@ -18,4 +18,5 @@ public interface LectureService {
 
     void deleteLecture(Lecture lecture);
 
+    void addLectureProgress(long lecture_id, long student_id);
 }

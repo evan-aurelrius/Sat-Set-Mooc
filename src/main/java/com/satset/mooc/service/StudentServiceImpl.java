@@ -1,6 +1,7 @@
 package com.satset.mooc.service;
 
 import com.satset.mooc.model.Course;
+import com.satset.mooc.model.Lecture;
 import com.satset.mooc.model.Quiz;
 import com.satset.mooc.model.Student;
 import com.satset.mooc.repository.StudentRepository;
@@ -46,6 +47,12 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void addCourse(Student student, Course course) {
         student.addEnrolledClass(course);
+        studentRepository.save(student);
+    }
+
+    @Override
+    public void addLecture(Student student, Lecture lecture) {
+        student.addLectureProgress(lecture);
         studentRepository.save(student);
     }
 

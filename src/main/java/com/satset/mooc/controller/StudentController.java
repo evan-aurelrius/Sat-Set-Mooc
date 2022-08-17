@@ -1,10 +1,12 @@
 package com.satset.mooc.controller;
 
 import com.satset.mooc.model.Course;
+import com.satset.mooc.model.Lecture;
 import com.satset.mooc.model.dto.CourseDto;
 import com.satset.mooc.model.response.StudentCourseResponse;
 import com.satset.mooc.security.service.UserDetailsImpl;
 import com.satset.mooc.service.CourseService;
+import com.satset.mooc.service.LectureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +26,9 @@ public class StudentController {
 
     @Autowired
     CourseService courseService;
+
+    @Autowired
+    LectureService lectureService;
 
     @PostMapping("/enroll")
     public ResponseEntity<String> enrollCourse(@RequestBody Map<String, Object> request, Authentication authentication) {
@@ -52,5 +57,16 @@ public class StudentController {
             map.put("prev","");
 
         return ResponseEntity.ok(map);
+    }
+
+    @PostMapping("/progress/{lecture_id}")
+    public ResponseEntity<String> enrollCourse(@PathVariable("lecture_id") long lecture_id, Authentication authentication) {
+        Lecture lecture = lectureService.getLectureById(lecture_id);
+        if(lecture==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
+        lectureService.addLectureProgress(lecture_id, principal.getId());
+
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 }

@@ -1,12 +1,8 @@
 package com.satset.mooc.controller;
 
 import com.satset.mooc.model.*;
-import com.satset.mooc.model.dto.AnswersDto;
 import com.satset.mooc.model.dto.QuestionDto;
 import com.satset.mooc.model.dto.QuizDto;
-import com.satset.mooc.model.dto.StudentDto;
-import com.satset.mooc.model.response.InstructorCourseResponse;
-import com.satset.mooc.model.response.StudentCourseResponse;
 import com.satset.mooc.security.service.UserDetailsImpl;
 import com.satset.mooc.service.*;
 import com.satset.mooc.util.MapperUtil;
@@ -18,9 +14,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/api")
 @RestController
@@ -160,7 +156,7 @@ public class QuizController {
     }
 
     @PostMapping("/quiz/{quiz_id}")
-    public ResponseEntity<?> submitQuiz(@PathVariable("quiz_id") long quiz_id, @RequestBody AnswersDto answersDto, Authentication authentication) {
+    public ResponseEntity<?> submitQuiz(@PathVariable("quiz_id") long quiz_id, @RequestBody Map<String, Object> request, Authentication authentication) {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         Student student = studentService.getStudentById(principal.getId());
 
@@ -168,8 +164,17 @@ public class QuizController {
         if(quiz==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         List<Question> questions = quiz.getQuestions();
 
-        StudentQuiz studentQuiz = studentQuizService.checkAnswer(student, quiz, questions, answersDto);
+        List<String> answers = (List<String>) request.get("answers");
+        StudentQuiz studentQuiz = studentQuizService.generateResult(student, quiz, questions, answers);
 
-        return ResponseEntity.ok(studentQuiz);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("quiz_id", studentQuiz.getStudentQuizKey().getQuiz_id());
+        map.put("score", studentQuiz.getScore());
+        map.put("answer_feedback", studentQuiz.getAnswer_feedback().replace("[","").replace("]","").split(", "));
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("data", map);
+
+        return ResponseEntity.ok(data);
     }
 }
