@@ -15,9 +15,13 @@ public class StudentQuiz {
     @Column(name = "")
     private int score;
 
+    @Column(name = "")
+    private String answer_feedback;
+
     public StudentQuiz(StudentQuizKey studentQuizKey) {
         this.studentQuizKey = studentQuizKey;
         this.score = -1;
+        this.answer_feedback = "";
     }
 
     public StudentQuizKey getStudentQuizKey() {
@@ -34,5 +38,13 @@ public class StudentQuiz {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public String getAnswer_feedback() {
+        return answer_feedback;
+    }
+
+    public void setAnswer_feedback(String answer_feedback) {
+        this.answer_feedback = answer_feedback;
     }
 }

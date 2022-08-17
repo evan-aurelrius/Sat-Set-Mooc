@@ -1,12 +1,14 @@
 package com.satset.mooc.service;
 
-import com.satset.mooc.model.Quiz;
-import com.satset.mooc.model.Student;
-import com.satset.mooc.model.StudentQuiz;
-import com.satset.mooc.model.StudentQuizKey;
+import com.satset.mooc.model.*;
+import com.satset.mooc.model.dto.AnswersDto;
 import com.satset.mooc.repository.StudentQuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class StudentQuizServiceImpl implements StudentQuizService{
@@ -20,10 +22,12 @@ public class StudentQuizServiceImpl implements StudentQuizService{
     }
 
     @Override
-    public void updateQuizScore(Student student, Quiz quiz, int score) {
+    public StudentQuiz updateQuizScore(Student student, Quiz quiz, int score, String answer_feedback) {
         StudentQuiz studentQuiz = studentQuizRepository.findByStudent_idAndQuiz_id(student.getId(), quiz.getId());
         studentQuiz.setScore(score);
+        studentQuiz.setAnswer_feedback(answer_feedback);
         studentQuizRepository.save(studentQuiz);
+        return studentQuiz;
     }
 
     @Override
@@ -31,5 +35,20 @@ public class StudentQuizServiceImpl implements StudentQuizService{
         StudentQuiz studentQuiz = studentQuizRepository.findByStudent_idAndQuiz_id(student.getId(), quiz.getId());
         if(studentQuiz.getScore()==-1) return true;
         return false;
+    }
+
+    @Override
+    public StudentQuiz checkAnswer(Student student, Quiz quiz, List<Question> questions, AnswersDto answersDto) {
+        List<Integer> answerFeedback = new ArrayList<>();
+        for (int i = 0; i < questions.size(); i++)
+            if (questions.get(i).getOpt_true().equals(answersDto.getAnswers().get(i)))
+                answerFeedback.add(1);
+            else
+                answerFeedback.add(0);
+
+        System.out.println(Collections.frequency(answerFeedback, 1));
+        var score = Collections.frequency(answerFeedback, 1) / questions.size();
+
+        return updateQuizScore(student, quiz, score, answerFeedback.toString());
     }
 }
