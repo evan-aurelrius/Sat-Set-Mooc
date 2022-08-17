@@ -51,4 +51,9 @@ public class StudentServiceImpl implements StudentService {
         if(Boolean.FALSE.equals(student.getEnrolledClass().contains(quiz.getCourse()))) return false;
         return !Boolean.FALSE.equals(studentQuizService.quizAvailable(student, quiz));
     }
+
+    @Override
+    public long countAll() {
+        return studentRepository.count();
+    }
 }

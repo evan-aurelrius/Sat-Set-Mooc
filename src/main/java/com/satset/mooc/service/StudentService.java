@@ -19,4 +19,6 @@ public interface StudentService {
     void addCourse(Student student, Course course);
 
     Boolean quizEligibilityCheck(Student student, Quiz quiz);
+
+    long countAll();
 }
