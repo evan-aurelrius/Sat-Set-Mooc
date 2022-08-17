@@ -12,7 +12,17 @@ public interface InstructorService {
 
     Instructor getInstructorByEmail(String email);
 
-    void setInstuctorStatus(Instructor instructor, String status);
+    Boolean setInstructorStatus(Instructor instructor, String status);
+
+    void delete(Instructor instructor);
+
+    void createDashboard(Instructor instructor);
+
+    InstructorDashboard getInstructorDashboardById(long id);
+
+    void updateDashboard(Instructor instructor, String courseOldStatus, String courseNewStatus);
+
+    Boolean addPendingCourseToDashboard(Instructor instructor);
 
     void save(Instructor instructor);
 
@@ -27,4 +37,8 @@ public interface InstructorService {
     Boolean quizEligibilityViaCourseCheck(Instructor instructor, Course course);
 
     Boolean questionEligibilityCheck(Instructor instructor, Question question);
+
+    Boolean isValidated(Instructor instructor);
+
+    long countAll();
 }

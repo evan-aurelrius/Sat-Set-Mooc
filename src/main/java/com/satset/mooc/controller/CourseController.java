@@ -1,11 +1,13 @@
 package com.satset.mooc.controller;
 
 import com.satset.mooc.model.Course;
+import com.satset.mooc.model.Instructor;
 import com.satset.mooc.model.dto.CourseDto;
 import com.satset.mooc.model.response.CourseResponse;
 import com.satset.mooc.model.response.InstructorCourseResponse;
 import com.satset.mooc.security.service.UserDetailsImpl;
 import com.satset.mooc.service.CourseService;
+import com.satset.mooc.service.InstructorService;
 import com.satset.mooc.util.MapperUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ public class CourseController {
 
     @Autowired
     CourseService courseService;
+    @Autowired
+    InstructorService instructorService;
 
     private ModelMapper modelMapper= MapperUtil.getInstance();
 
@@ -32,11 +36,12 @@ public class CourseController {
         if(page<1) return ResponseEntity.badRequest().build();
         List<CourseResponse> courses = courseService.getAllCourseWithPagination(page);
 
+//        TODO: Handle pagination problem, check page.hasNext() before put "next" to map
         HashMap<String, Object> map = new HashMap<>();
         map.put("data", courses);
-        map.put("next", "/api/mycourse/%d/".formatted(page+1));
+        map.put("next", "/api/course/%d/".formatted(page+1));
         if(page>1)
-            map.put("prev", "/api/mycourse/%d/".formatted(page-1));
+            map.put("prev", "/api/course/%d/".formatted(page-1));
         else
             map.put("prev","");
 
@@ -47,7 +52,10 @@ public class CourseController {
     public ResponseEntity<String> createCourse(@RequestBody CourseDto courseDto, Authentication authentication) {
         Course course = modelMapper.map(courseDto, Course.class);
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
-        Boolean courseIsCreated = courseService.createCourse(course, principal.getId());
+        Instructor instructor = instructorService.getInstructorById(principal.getId());
+        if(Boolean.FALSE.equals(instructorService.isValidated(instructor))) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+
+        Boolean courseIsCreated = courseService.createCourse(course, instructor.getId());
 
         if(Boolean.FALSE.equals(courseIsCreated)) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
@@ -58,8 +66,11 @@ public class CourseController {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         long user_id = principal.getId();
         if(page<1 || user_id<1) return ResponseEntity.badRequest().build();
-        Page<Course> coursePage = courseService.getCourseWithPagination(page, user_id);
 
+        Instructor instructor = instructorService.getInstructorById(user_id);
+        if(Boolean.FALSE.equals(instructorService.isValidated(instructor))) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+
+        Page<Course> coursePage = courseService.getCourseWithPagination(page, user_id);
         HashMap<String, Object> map = new HashMap<>();
         List<InstructorCourseResponse> courses = courseService.convertToList(coursePage);
         map.put("data", courses);

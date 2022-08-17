@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CourseServiceImpl implements CourseService{
@@ -48,13 +49,19 @@ public class CourseServiceImpl implements CourseService{
         lectureService.addAndSaveAllLectures(course.getLectures(), course);
         quizService.saveQuizzesAndQuestions(course.getQuizzes(), course);
         courseRepository.save(course);
+
         return true;
     }
 
     @Override
-    public void setCourseStatus(Course course, String status) {
-        course.setStatus(status);
-        courseRepository.save(course);
+    public Boolean setCourseStatus(Course course, String status) {
+        if(Boolean.FALSE.equals(course.getStatus().equalsIgnoreCase("Approved"))) {
+            instructorService.updateDashboard(course.getInstructor(), course.getStatus(), status);
+            course.setStatus(status);
+            courseRepository.save(course);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -132,5 +139,15 @@ public class CourseServiceImpl implements CourseService{
             responseList.add(new InstructorCourseResponse(c.getId(), c.getTitle(), c.getImage(), c.getStudents().size(), c.getStatus()));
         }
         return responseList;
+    }
+
+    @Override
+    public long countAll() {
+        return courseRepository.count();
+    }
+
+    @Override
+    public List<Map<String, Object>> getTop5Course() {
+        return courseRepository.findTop5Course();
     }
 }

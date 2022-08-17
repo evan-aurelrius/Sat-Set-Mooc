@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CourseService {
 
@@ -20,7 +21,7 @@ public interface CourseService {
 
     Boolean createCourse(Course course, Long instructor_id);
 
-    void setCourseStatus(Course course, String status);
+    Boolean setCourseStatus(Course course, String status);
 
     void deleteCourse(Course course);
 
@@ -42,4 +43,7 @@ public interface CourseService {
 
     List<InstructorCourseResponse> convertToList(Page<Course> coursePage);
 
+    long countAll();
+
+    List<Map<String, Object>> getTop5Course();
 }
