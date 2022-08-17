@@ -16,5 +16,5 @@ public interface StudentQuizService {
 
     Boolean quizAvailable(Student student, Quiz quiz);
 
-    StudentQuiz checkAnswer(Student student, Quiz quiz, List<Question> questions, AnswersDto answersDto);
+    StudentQuiz generateResult(Student student, Quiz quiz, List<Question> questions, List<String> answers);
 }

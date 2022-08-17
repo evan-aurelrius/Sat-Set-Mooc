@@ -120,4 +120,8 @@ public class Student {
     public void setLectures(List<Lecture> lectures) {
         this.lectures = lectures;
     }
+
+    public void addLectureProgress(Lecture lecture) {
+        this.lectures.add(lecture);
+    }
 }

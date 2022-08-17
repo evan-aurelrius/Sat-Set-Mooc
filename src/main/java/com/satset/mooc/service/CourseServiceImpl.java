@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -113,10 +114,11 @@ public class CourseServiceImpl implements CourseService{
     @Override
     public List<StudentCourseResponse> getStudentCourseWithPagination(int page, long user_id) {
         if(studentService.getStudentById(user_id)==null) return null;
-        List<Course> rawLst = courseRepository.findAll(PageRequest.of(page-1,10)).toList();
+//        List<Course> rawLst = courseRepository.findAll(PageRequest.of(page-1,10)).toList();
+        List<Map<String, Object>> rawLst = courseRepository.findAllStudentCourseWithPagination(user_id, PageRequest.of(page-1,10)).toList();
         List<StudentCourseResponse> responseList = new ArrayList<>();
-        for(Course c:rawLst) {
-            responseList.add(new StudentCourseResponse(c.getId(), c.getTitle(), c.getImage(), c.getInstructor().getName(), (c.getLectures().size()+c.getQuizzes().size()), 0));
+        for(Map<String, Object> c:rawLst) {
+            responseList.add(new StudentCourseResponse(((BigInteger)c.get("id")).longValue(), c.get("title").toString(), c.get("image").toString(), c.get("instructor_name").toString(), ((BigInteger)c.get("total_content")).longValue(), ((BigInteger)c.get("completed_content")).longValue()));
         }
         return responseList;
     }

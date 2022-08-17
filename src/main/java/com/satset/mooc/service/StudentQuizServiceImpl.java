@@ -24,8 +24,15 @@ public class StudentQuizServiceImpl implements StudentQuizService{
     @Override
     public StudentQuiz updateQuizScore(Student student, Quiz quiz, int score, String answer_feedback) {
         StudentQuiz studentQuiz = studentQuizRepository.findByStudent_idAndQuiz_id(student.getId(), quiz.getId());
-        studentQuiz.setScore(score);
-        studentQuiz.setAnswer_feedback(answer_feedback);
+        if (studentQuiz != null) {
+            studentQuiz.setScore(score);
+            studentQuiz.setAnswer_feedback(answer_feedback);
+        }else{
+            studentQuiz = new StudentQuiz();
+            studentQuiz.setStudentQuizKey(new StudentQuizKey(student.getId(), quiz.getId()));
+            studentQuiz.setScore(score);
+            studentQuiz.setAnswer_feedback(answer_feedback);
+        }
         studentQuizRepository.save(studentQuiz);
         return studentQuiz;
     }
@@ -38,10 +45,10 @@ public class StudentQuizServiceImpl implements StudentQuizService{
     }
 
     @Override
-    public StudentQuiz checkAnswer(Student student, Quiz quiz, List<Question> questions, AnswersDto answersDto) {
+    public StudentQuiz generateResult(Student student, Quiz quiz, List<Question> questions, List<String> answers) {
         List<Integer> answerFeedback = new ArrayList<>();
         for (int i = 0; i < questions.size(); i++)
-            if (questions.get(i).getOpt_true().equals(answersDto.getAnswers().get(i)))
+            if (questions.get(i).getOpt_true().equals(answers.get(i)))
                 answerFeedback.add(1);
             else
                 answerFeedback.add(0);

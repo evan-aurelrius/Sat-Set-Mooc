@@ -78,4 +78,8 @@ public class Lecture {
     public void setStudents(Set<Student> students) {
         this.students = students;
     }
+
+    public void addStudents(Student student) {
+        this.students.add(student);
+    }
 }
