@@ -3,6 +3,7 @@ package com.satset.mooc.service;
 import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Lecture;
 import com.satset.mooc.model.Quiz;
+import com.satset.mooc.model.response.CourseProposalResponse;
 import com.satset.mooc.model.response.CourseResponse;
 import com.satset.mooc.model.response.InstructorCourseResponse;
 import com.satset.mooc.model.response.StudentCourseResponse;
@@ -41,9 +42,13 @@ public interface CourseService {
 
     List<CourseResponse> getAllCourseWithPagination(int page);
 
-    List<InstructorCourseResponse> convertToList(Page<Course> coursePage);
+    List<InstructorCourseResponse> convertToListOfInstructorCourseResponse(Page<Course> coursePage);
 
     long countAll();
 
     List<Map<String, Object>> getTop5Course();
+
+    Page<Course> getCourseProposalPage(int page);
+
+    List<CourseProposalResponse> convertToListOfCourseProposalResponse(Page<Course> coursePage);
 }

@@ -1,6 +1,10 @@
 package com.satset.mooc.service;
 
 import com.satset.mooc.model.*;
+import com.satset.mooc.model.response.InstructorProposalResponse;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 public interface InstructorService {
 
@@ -41,4 +45,8 @@ public interface InstructorService {
     Boolean isValidated(Instructor instructor);
 
     long countAll();
+
+    Page<Instructor> getInstructorProposalPage(int page);
+
+    List<InstructorProposalResponse> convertToList(Page<Instructor> instructorPage);
 }

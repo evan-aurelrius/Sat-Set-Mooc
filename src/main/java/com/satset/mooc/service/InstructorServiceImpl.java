@@ -2,10 +2,17 @@ package com.satset.mooc.service;
 
 import com.satset.mooc.model.*;
 import com.satset.mooc.model.InstructorDashboard;
+import com.satset.mooc.model.response.InstructorProposalResponse;
 import com.satset.mooc.repository.InstructorDashboardRepository;
 import com.satset.mooc.repository.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class InstructorServiceImpl implements InstructorService{
@@ -142,5 +149,23 @@ public class InstructorServiceImpl implements InstructorService{
     @Override
     public long countAll() {
         return instructorRepository.count();
+    }
+
+    @Override
+    public Page<Instructor> getInstructorProposalPage(int page) {
+        Pageable pageable = PageRequest.of(page-1,10);
+        Page<Instructor> instructorPage =
+                instructorRepository.findAllByVerified_status(pageable);
+        return instructorPage;
+    }
+
+    @Override
+    public List<InstructorProposalResponse> convertToList(Page<Instructor> instructorPage) {
+        List<Instructor> rawLst = instructorPage.toList();
+        List<InstructorProposalResponse> lst = new ArrayList<>();
+        for(Instructor i:rawLst) {
+            lst.add(new InstructorProposalResponse(i.getId(), i.getName(), i.getGender(), i.getImage()));
+        }
+        return lst;
     }
 }

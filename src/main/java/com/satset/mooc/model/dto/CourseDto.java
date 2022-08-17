@@ -1,6 +1,5 @@
 package com.satset.mooc.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.satset.mooc.model.Instructor;
@@ -8,9 +7,7 @@ import com.satset.mooc.model.Lecture;
 import com.satset.mooc.model.Quiz;
 import com.satset.mooc.model.Student;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -43,7 +40,10 @@ public class CourseDto {
     @JsonProperty("quizzes")
     private List<Quiz> quizzes = new LinkedList<>();
 
-    public CourseDto(String title, String description, String image, Instructor instructor, Set<Student> students, List<Lecture> lectures, List<Quiz> quizzes) {
+    @JsonProperty("order")
+    private List<String> courseOrder = new LinkedList<>();
+
+    public CourseDto(String title, String description, String image, Instructor instructor, Set<Student> students, List<Lecture> lectures, List<Quiz> quizzes, List<String> courseOrder) {
         this.title = title;
         this.description = description;
         this.image = image;
@@ -52,5 +52,6 @@ public class CourseDto {
         this.students = students;
         this.lectures = lectures;
         this.quizzes = quizzes;
+        this.courseOrder = courseOrder;
     }
 }

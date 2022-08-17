@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+
 @RestController
 public class LectureController {
 
@@ -29,7 +31,7 @@ public class LectureController {
     private ModelMapper modelMapper= MapperUtil.getInstance();
 
     @PostMapping("/api/course/{course_id}/lecture")
-    public ResponseEntity<String> addLecture(@PathVariable("course_id") long course_id, @RequestBody LectureDto lectureDto, Authentication authentication) {
+    public ResponseEntity<?> addLecture(@PathVariable("course_id") long course_id, @RequestBody LectureDto lectureDto, Authentication authentication) {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         long user_id = principal.getId();
         Instructor instructor = instructorService.getInstructorById(user_id);
@@ -39,7 +41,9 @@ public class LectureController {
 
         Lecture lecture = modelMapper.map(lectureDto, Lecture.class);
         courseService.addLecture(course, lecture);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        HashMap<String, Long> map = new HashMap<>();
+        map.put("lecture_id",lecture.getId());
+        return ResponseEntity.ok(map);
     }
 
     @PutMapping("/api/lecture/{lecture_id}")

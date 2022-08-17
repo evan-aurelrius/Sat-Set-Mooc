@@ -1,6 +1,7 @@
 package com.satset.mooc.repository;
 
 import com.satset.mooc.model.Course;
+import com.satset.mooc.model.Instructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,5 +29,8 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "ORDER BY students DESC\n" +
             "LIMIT 5", nativeQuery = true)
     List<Map<String, Object>> findTop5Course();
+
+    @Query(nativeQuery = false, value = "select c from Course as c where c.status='Pending'")
+    Page<Course> findAllByVerified_status(Pageable pageable);
 
 }

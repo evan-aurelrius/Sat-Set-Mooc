@@ -49,7 +49,7 @@ public class CourseController {
     }
 
     @PostMapping("/course")
-    public ResponseEntity<String> createCourse(@RequestBody CourseDto courseDto, Authentication authentication) {
+    public ResponseEntity<?> createCourse(@RequestBody CourseDto courseDto, Authentication authentication) {
         Course course = modelMapper.map(courseDto, Course.class);
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         Instructor instructor = instructorService.getInstructorById(principal.getId());
@@ -58,7 +58,9 @@ public class CourseController {
         Boolean courseIsCreated = courseService.createCourse(course, instructor.getId());
 
         if(Boolean.FALSE.equals(courseIsCreated)) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        HashMap<String, Long> map = new HashMap<>();
+        map.put("course_id",course.getId());
+        return ResponseEntity.ok(map);
     }
 
     @GetMapping("/mycourse/{page}")
@@ -72,7 +74,7 @@ public class CourseController {
 
         Page<Course> coursePage = courseService.getCourseWithPagination(page, user_id);
         HashMap<String, Object> map = new HashMap<>();
-        List<InstructorCourseResponse> courses = courseService.convertToList(coursePage);
+        List<InstructorCourseResponse> courses = courseService.convertToListOfInstructorCourseResponse(coursePage);
         map.put("data", courses);
         if(coursePage.hasNext()) {
             map.put("next", "/api/mycourse/%d/".formatted(page+1));

@@ -2,29 +2,19 @@ package com.satset.mooc.controller;
 
 import com.satset.mooc.model.*;
 import com.satset.mooc.model.dto.AdminDto;
-import com.satset.mooc.model.response.AdminSummaryResponse;
-import com.satset.mooc.model.response.DailyNewUserResponse;
-import com.satset.mooc.model.response.InstructorDashboardResponse;
-import com.satset.mooc.model.response.TopCourseResponse;
-import com.satset.mooc.security.jwt.JwtUtils;
-import com.satset.mooc.security.service.UserDetailsImpl;
+import com.satset.mooc.model.response.*;
 import com.satset.mooc.service.AdminService;
 import com.satset.mooc.service.CourseService;
 import com.satset.mooc.service.InstructorService;
 import com.satset.mooc.util.UserUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RequestMapping("/api")
 @RestController
@@ -91,6 +81,44 @@ public class AdminController {
         innerMap.put("top_courses", topCourseResponses);
 
         return new ResponseEntity<>(outerMap, HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/proposal-instructors/{page}")
+    public ResponseEntity<?> getInstructorProposal(@PathVariable("page") int page) {
+        HashMap<String, Object> map = new HashMap<>();
+        Page<Instructor> instructorPage = instructorService.getInstructorProposalPage(page);
+        List<InstructorProposalResponse> lst = instructorService.convertToList(instructorPage);
+
+        map.put("data",lst);
+        if(instructorPage.hasNext())
+            map.put("next", "/api/proposal-instructors/%d/".formatted(page+1));
+        else map.put("next","");
+
+        if(instructorPage.hasPrevious())
+            map.put("prev", "/api/proposal-instructors/%d/".formatted(page-1));
+        else
+            map.put("prev","");
+
+        return ResponseEntity.ok(map);
+    }
+
+    @GetMapping("/proposal-courses/{page}")
+    public ResponseEntity<?> getCourseProposal(@PathVariable("page") int page) {
+        HashMap<String, Object> map = new HashMap<>();
+        Page<Course> coursePage = courseService.getCourseProposalPage(page);
+        List<CourseProposalResponse> lst = courseService.convertToListOfCourseProposalResponse(coursePage);
+
+        map.put("data",lst);
+        if(coursePage.hasNext())
+            map.put("next", "/api/proposal-courses/%d/".formatted(page+1));
+        else map.put("next","");
+
+        if(coursePage.hasPrevious())
+            map.put("prev", "/api/proposal-courses/%d/".formatted(page-1));
+        else
+            map.put("prev","");
+
+        return ResponseEntity.ok(map);
     }
 
 }

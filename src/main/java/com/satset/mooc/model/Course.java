@@ -1,7 +1,6 @@
 package com.satset.mooc.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +14,6 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @Table(name = "course")
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,7 +51,11 @@ public class Course {
     @OneToMany(mappedBy = "course")
     private List<Quiz> quizzes = new LinkedList<>();
 
-    public Course(String title, String description, String image, Instructor instructor, Set<Student> students, List<Lecture> lectures, List<Quiz> quizzes) {
+    @ElementCollection
+    @CollectionTable(name = "course_order", joinColumns = @JoinColumn(name = "course_id"))
+    private List<String> courseOrder = new LinkedList<>();
+
+    public Course(String title, String description, String image, Instructor instructor, Set<Student> students, List<Lecture> lectures, List<Quiz> quizzes, List<String> courseOrder) {
         this.title = title;
         this.description = description;
         this.image = image;
@@ -62,6 +64,7 @@ public class Course {
         this.students = students;
         this.lectures = lectures;
         this.quizzes = quizzes;
+        this.courseOrder = courseOrder;
     }
 
     public long getId() {
@@ -159,5 +162,17 @@ public class Course {
 
     public void setQuizzes(List<Quiz> quizzes) {
         this.quizzes = quizzes;
+    }
+
+    public List<String> getCourseOrder() {
+        return courseOrder;
+    }
+
+    public void addOrder(String newOrder) {
+        this.courseOrder.add(newOrder);
+    }
+
+    public void setCourseOrder(List<String> courseOrder) {
+        this.courseOrder = courseOrder;
     }
 }

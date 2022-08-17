@@ -67,9 +67,8 @@ public class QuizController {
         return ResponseEntity.badRequest().build();
     }
 
-
     @PostMapping("/course/{course_id}/quiz")
-    public ResponseEntity<String> addQuiz(@PathVariable("course_id") long course_id, @RequestBody QuizDto quizDto, Authentication authentication) {
+    public ResponseEntity<?> addQuiz(@PathVariable("course_id") long course_id, @RequestBody QuizDto quizDto, Authentication authentication) {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         long user_id = principal.getId();
         Instructor instructor = instructorService.getInstructorById(user_id);
@@ -80,7 +79,9 @@ public class QuizController {
 
         Quiz quiz = modelMapper.map(quizDto, Quiz.class);
         courseService.addQuiz(course, quiz);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        HashMap<String, Long> map = new HashMap<>();
+        map.put("quiz_id",quiz.getId());
+        return ResponseEntity.ok(map);
     }
 
     @PutMapping("/quiz/{quiz_id}")
@@ -113,7 +114,7 @@ public class QuizController {
     }
 
     @PostMapping("/quiz/{quiz_id}/question")
-    public ResponseEntity<String> addQuestion(@PathVariable("quiz_id") long quiz_id, @RequestBody QuestionDto questionDto, Authentication authentication) {
+    public ResponseEntity<?> addQuestion(@PathVariable("quiz_id") long quiz_id, @RequestBody QuestionDto questionDto, Authentication authentication) {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         long user_id = principal.getId();
         Instructor instructor = instructorService.getInstructorById(user_id);
@@ -124,7 +125,9 @@ public class QuizController {
 
         Question question = modelMapper.map(questionDto, Question.class);
         quizService.addQuestion(quiz, question);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        HashMap<String, Long> map = new HashMap<>();
+        map.put("question_id",question.getId());
+        return ResponseEntity.ok(map);
     }
 
     @PutMapping("/question/{question_id}")
