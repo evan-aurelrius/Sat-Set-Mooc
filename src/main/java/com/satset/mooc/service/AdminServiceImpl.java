@@ -77,4 +77,9 @@ public class AdminServiceImpl implements AdminService{
 
         return lst;
     }
+
+    @Override
+    public List<Admin> getAllAdmins() {
+        return adminRepository.findAll();
+    }
 }

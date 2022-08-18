@@ -20,4 +20,6 @@ public interface LectureService {
     void deleteLecture(Lecture lecture);
 
     void addLectureProgress(Lecture lecture, Student student);
+
+    long countCompletedLecture(long student_Id);
 }

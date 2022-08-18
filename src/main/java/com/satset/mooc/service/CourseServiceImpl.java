@@ -28,6 +28,8 @@ public class CourseServiceImpl implements CourseService{
     @Autowired
     StudentService studentService;
     @Autowired
+    MailService mailService;
+    @Autowired
     StudentLectureService studentLectureService;
     @Autowired
     StudentQuizService studentQuizService;
@@ -52,6 +54,7 @@ public class CourseServiceImpl implements CourseService{
         lectureService.addAndSaveAllLectures(course.getLectures(), course);
         quizService.saveQuizzesAndQuestions(course.getQuizzes(), course);
         courseRepository.save(course);
+        mailService.sendMailToAllAdmin("Course Verification", "Hello, \n\nNew Course with the name "+course.getTitle()+" from Instructor "+instructor.getName()+" waiting for verification \n\nThanks.");
 
         return true;
     }
@@ -169,6 +172,16 @@ public class CourseServiceImpl implements CourseService{
             lst.add(new CourseProposalResponse(c.getId(), c.getTitle(), c.getImage(), c.getInstructor().getName()));
         }
         return lst;
+    }
+
+    @Override
+    public long countEnrolledCourse(long student_Id) {
+        return courseRepository.findAllByStudent(student_Id).stream().count();
+    }
+
+    @Override
+    public long countCompletedCourse(long student_Id) {
+        return courseRepository.findAllCompletedCourse(student_Id).stream().count();
     }
 
     @Override

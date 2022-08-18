@@ -67,4 +67,9 @@ public class LectureServiceImpl implements LectureService{
         studentLectureService.addProgress(student.getId(), lecture.getId());
     }
 
+    @Override
+    public long countCompletedLecture(long student_Id) {
+        return lectureRepository.findAllCompletedLecture(student_Id).stream().count();
+    }
+
 }

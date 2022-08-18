@@ -48,6 +48,11 @@ public class StudentQuizServiceImpl implements StudentQuizService{
     }
 
     @Override
+    public long countCompletedQuiz(long student_Id) {
+        return studentQuizRepository.findAllCompletedQuiz(student_Id).stream().count();
+    }
+
+    @Override
     public StudentQuiz getStudentQuizByStudentIdAndQuizId(long user_id, long quiz_id) {
         return studentQuizRepository.findByStudent_idAndQuiz_id(user_id, quiz_id).orElse(null);
     }

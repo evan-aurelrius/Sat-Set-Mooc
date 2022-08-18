@@ -60,4 +60,8 @@ public interface CourseService {
     void setCourseOrder(Course course, List<String> order);
 
     Boolean eligibilityCheck(Course course, long user_id);
+
+    long countEnrolledCourse(long student_id);
+
+    long countCompletedCourse(long student_Id);
 }

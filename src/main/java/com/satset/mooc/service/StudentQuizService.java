@@ -15,5 +15,7 @@ public interface StudentQuizService {
 
     StudentQuiz generateResult(Student student, Quiz quiz, List<Question> questions, List<String> answers);
 
+    long countCompletedQuiz(long student_Id);
+
     StudentQuiz getStudentQuizByStudentIdAndQuizId(long user_id, long id);
 }
