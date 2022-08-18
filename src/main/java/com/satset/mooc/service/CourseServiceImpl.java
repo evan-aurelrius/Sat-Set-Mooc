@@ -30,6 +30,8 @@ public class CourseServiceImpl implements CourseService{
     QuizService quizService;
     @Autowired
     StudentService studentService;
+    @Autowired
+    MailService mailService;
 
     @Override
     public Iterable<Course> getCourse(Pageable pageable) {
@@ -51,6 +53,7 @@ public class CourseServiceImpl implements CourseService{
         lectureService.addAndSaveAllLectures(course.getLectures(), course);
         quizService.saveQuizzesAndQuestions(course.getQuizzes(), course);
         courseRepository.save(course);
+        mailService.sendMailToAllAdmin("Course Verification", "Hello, \n\nNew Course with the name "+course.getTitle()+" from Instructor "+instructor.getName()+" waiting for verification \n\nThanks.");
 
         return true;
     }

@@ -8,5 +8,8 @@ public interface MailService {
 
     void sendMail(String to, String subject, String messages);
 
-    void sendAdminVerifyInstructor(String subject, String messages);
+    void sendMail(String[] to, String subject, String messages);
+
+    void sendMailToAllAdmin(String subject, String messages);
+
 }
