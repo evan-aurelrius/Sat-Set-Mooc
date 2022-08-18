@@ -1,12 +1,10 @@
 package com.satset.mooc.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Question;
 import lombok.Data;
 
-import java.util.LinkedList;
 import java.util.List;
 
 @Data
@@ -17,7 +15,7 @@ public class QuizDto {
     private String title;
 
     @JsonProperty("questions")
-    private List<Question> questions = new LinkedList<>();
+    private List<Question> questions;
 
     private Course course;
 
@@ -33,14 +31,6 @@ public class QuizDto {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public List<Question> getQuestions() {
-        return questions;
-    }
-
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
     }
 
     public Course getCourse() {

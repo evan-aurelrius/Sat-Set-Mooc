@@ -3,15 +3,15 @@ package com.satset.mooc.service;
 import com.satset.mooc.model.Admin;
 import com.satset.mooc.model.DailyNewUser;
 import com.satset.mooc.model.Instructor;
-import com.satset.mooc.model.Student;
-import com.satset.mooc.repository.*;
+import com.satset.mooc.repository.AdminRepository;
+import com.satset.mooc.repository.DailyNewUserRepository;
+import com.satset.mooc.repository.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -21,8 +21,6 @@ public class InitializeSqlDataServiceImpl implements InitializeSqlDataService{
     AdminRepository adminRepository;
     @Autowired
     InstructorRepository instructorRepository;
-    @Autowired
-    StudentRepository studentRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
@@ -44,7 +42,7 @@ public class InitializeSqlDataServiceImpl implements InitializeSqlDataService{
     private void initializeDailyNewUser() {
         List<DailyNewUser> lst = new ArrayList<>();
         for(int i=6; i>=0; i--)
-            lst.add(new DailyNewUser(new Date(System.currentTimeMillis()- i * 24 * 60 * 60 * 1000)));
+            lst.add(new DailyNewUser(new Date(System.currentTimeMillis()- (long) i * 24 * 60 * 60 * 1000)));
         dailyNewUserRepository.saveAll(lst);
     }
 

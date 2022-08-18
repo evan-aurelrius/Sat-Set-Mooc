@@ -1,14 +1,17 @@
 package com.satset.mooc.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name="student")
 public class Student {
     @Id
@@ -36,9 +39,6 @@ public class Student {
 
     @ManyToMany(mappedBy = "students")
     private List<Course> enrolledClass = new LinkedList<>();
-
-    @ManyToMany(mappedBy = "students")
-    private List<Lecture> lectures = new LinkedList<>();
 
     public Student(String name, String gender, String image, String email, String password) {
         this.name = name;
@@ -73,16 +73,8 @@ public class Student {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp created_at) {
-        this.createdAt = createdAt;
-    }
-
     public List<Course> getEnrolledClass() {
         return enrolledClass;
-    }
-
-    public void setEnrolledClass(List<Course> courseOwned) {
-        this.enrolledClass = courseOwned;
     }
 
     public void addEnrolledClass(Course course) {
@@ -113,15 +105,4 @@ public class Student {
         this.password = password;
     }
 
-    public List<Lecture> getLectures() {
-        return lectures;
-    }
-
-    public void setLectures(List<Lecture> lectures) {
-        this.lectures = lectures;
-    }
-
-    public void addLectureProgress(Lecture lecture) {
-        this.lectures.add(lecture);
-    }
 }

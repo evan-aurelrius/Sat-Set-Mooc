@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface InstructorService {
 
-    Instructor registerInstructor(String name, String gender, String image, String email, String password);
+    void registerInstructor(String name, String gender, String image, String email, String password);
 
     Boolean instructorExist(String email);
 
@@ -26,7 +26,7 @@ public interface InstructorService {
 
     void updateDashboard(Instructor instructor, String courseOldStatus, String courseNewStatus);
 
-    Boolean addPendingCourseToDashboard(Instructor instructor);
+    void addPendingCourseToDashboard(Instructor instructor);
 
     void save(Instructor instructor);
 

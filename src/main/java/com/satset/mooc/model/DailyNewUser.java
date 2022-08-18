@@ -39,10 +39,6 @@ public class DailyNewUser {
         return date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     public long getNew_instructor() {
         return new_instructor;
     }

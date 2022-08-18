@@ -1,7 +1,7 @@
 package com.satset.mooc.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -13,6 +13,7 @@ import java.util.Set;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "course")
 public class Course {
     @Id
@@ -22,9 +23,6 @@ public class Course {
 
     @Column(name = "title")
     private String title;
-
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
 
     @Column(name = "status")
     private String status = "Pending";
@@ -55,9 +53,8 @@ public class Course {
     @CollectionTable(name = "course_order", joinColumns = @JoinColumn(name = "course_id"))
     private List<String> courseOrder = new LinkedList<>();
 
-    public Course(String title, String description, String image, Instructor instructor, Set<Student> students, List<Lecture> lectures, List<Quiz> quizzes, List<String> courseOrder) {
+    public Course(String title, String image, Instructor instructor, Set<Student> students, List<Lecture> lectures, List<Quiz> quizzes, List<String> courseOrder) {
         this.title = title;
-        this.description = description;
         this.image = image;
         this.updated_at = updateTime();
         this.instructor = instructor;
@@ -75,16 +72,8 @@ public class Course {
         return title;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
     public String getImage() {
         return image;
-    }
-
-    public Timestamp getUpdated_at() {
-        return updated_at;
     }
 
     public Timestamp updateTime() {
@@ -117,11 +106,6 @@ public class Course {
         this.students.add(student);
     }
 
-    public void setStudents(Set<Student> students) {
-        updateTime();
-        this.students = students;
-    }
-
     public List<Lecture> getLectures() {
         return lectures;
     }
@@ -144,32 +128,12 @@ public class Course {
         this.title = title;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public void setImage(String image) {
         this.image = image;
     }
 
-    public void setUpdated_at(Timestamp updated_at) {
-        this.updated_at = updated_at;
-    }
-
-    public void setLectures(List<Lecture> lectures) {
-        this.lectures = lectures;
-    }
-
-    public void setQuizzes(List<Quiz> quizzes) {
-        this.quizzes = quizzes;
-    }
-
     public List<String> getCourseOrder() {
         return courseOrder;
-    }
-
-    public void addOrder(String newOrder) {
-        this.courseOrder.add(newOrder);
     }
 
     public void setCourseOrder(List<String> courseOrder) {

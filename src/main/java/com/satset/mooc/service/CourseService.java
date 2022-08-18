@@ -1,12 +1,7 @@
 package com.satset.mooc.service;
 
-import com.satset.mooc.model.Course;
-import com.satset.mooc.model.Lecture;
-import com.satset.mooc.model.Quiz;
-import com.satset.mooc.model.response.CourseProposalResponse;
-import com.satset.mooc.model.response.CourseResponse;
-import com.satset.mooc.model.response.InstructorCourseResponse;
-import com.satset.mooc.model.response.StudentCourseResponse;
+import com.satset.mooc.model.*;
+import com.satset.mooc.model.response.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -55,6 +50,20 @@ public interface CourseService {
     Page<Course> getCourseProposalPage(int page);
 
     List<CourseProposalResponse> convertToListOfCourseProposalResponse(Page<Course> coursePage);
+
+    Boolean eligibilityCheck(Course course, Instructor instructor);
+
+    Boolean enrolledCheck(Course course, Student student);
+
+    void fillCourseDetailResponseData(CourseDetailResponse courseDetailResponse, Object user);
+
+    void setLectureStatus(List<CourseDetailLectureResponse> cdlr, long user_id);
+
+    void setQuizStatus(List<CourseDetailQuizResponse> cdqr, long user_id);
+
+    void setCourseOrder(Course course, List<String> order);
+
+    Boolean eligibilityCheck(Course course, long user_id);
 
     long countEnrolledCourse(long student_id);
 

@@ -2,6 +2,7 @@ package com.satset.mooc.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.util.*;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name="quiz")
 public class Quiz {
     @Id
@@ -46,10 +48,6 @@ public class Quiz {
 
     public void addQuestion(Question question) {
         this.questions.add(question);
-    }
-
-    public void setQuestions(List<Question> questions) {
-        this.questions = questions;
     }
 
     public Course getCourse() {

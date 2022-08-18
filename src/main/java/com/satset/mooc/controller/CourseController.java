@@ -2,12 +2,15 @@ package com.satset.mooc.controller;
 
 import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Instructor;
+import com.satset.mooc.model.Student;
 import com.satset.mooc.model.dto.CourseDto;
+import com.satset.mooc.model.response.CourseDetailResponse;
 import com.satset.mooc.model.response.CourseResponse;
 import com.satset.mooc.model.response.InstructorCourseResponse;
 import com.satset.mooc.security.service.UserDetailsImpl;
 import com.satset.mooc.service.CourseService;
 import com.satset.mooc.service.InstructorService;
+import com.satset.mooc.service.StudentService;
 import com.satset.mooc.util.MapperUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -28,10 +32,52 @@ public class CourseController {
     CourseService courseService;
     @Autowired
     InstructorService instructorService;
+    @Autowired
+    StudentService studentService;
 
-    private ModelMapper modelMapper= MapperUtil.getInstance();
+    final private ModelMapper modelMapper= MapperUtil.getInstance();
 
-    @GetMapping("/courses/{page}")
+    @GetMapping("/course/{course_id}")
+    public ResponseEntity<?> getCourseDetail(@PathVariable("course_id") long course_id, Authentication authentication) {
+        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
+        long user_id = principal.getId();
+
+        Object user;
+
+        Course course = courseService.getCourseById(course_id);
+        if(course==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        if(principal.getRole().equals("instructor")) {
+            user = instructorService.getInstructorById(user_id);
+            if(Boolean.FALSE.equals(instructorService.isValidated((Instructor) user))) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            Boolean isEligibleInstructor = courseService.eligibilityCheck(course, (Instructor) user);
+            if(Boolean.FALSE.equals(isEligibleInstructor)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        } else if(principal.getRole().equals("student"))
+            user = studentService.getStudentById(user_id);
+        else
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+
+        Boolean isEligibleStudent = null;
+        if (user instanceof Student) {
+            isEligibleStudent = courseService.enrolledCheck(course, (Student) user);
+        }
+        HashMap<String, Object> map = new HashMap<>();
+
+        CourseDetailResponse courseDetailResponse = modelMapper.map(course, CourseDetailResponse.class);
+        courseService.fillCourseDetailResponseData(courseDetailResponse, user);
+        if(Boolean.TRUE.equals(isEligibleStudent))
+            map.put("is_enrolled", true);
+        else
+            map.put("is_enrolled", false);
+        map.put("status", course.getStatus());
+        map.put("data",courseDetailResponse);
+
+
+        return ResponseEntity.ok(map);
+    }
+
+
+        @GetMapping("/courses/{page}")
     public ResponseEntity<?> getCourse(@PathVariable("page") int page) {
         if(page<1) return ResponseEntity.badRequest().build();
 
@@ -88,6 +134,32 @@ public class CourseController {
         else
             map.put("prev","");
 
+        return ResponseEntity.ok(map);
+    }
+
+    @PutMapping("/course-order/{course_id}")
+    public ResponseEntity<?> setCourseOrder(@PathVariable("course_id") long course_id, @RequestBody Map<String,List<String>> request, Authentication authentication) {
+        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
+        long user_id = principal.getId();
+
+        Course course = courseService.getCourseById(course_id);
+        if(course==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        Instructor instructor = instructorService.getInstructorById(user_id);
+        Boolean isEligible = courseService.eligibilityCheck(course, instructor);
+        if(Boolean.FALSE.equals(isEligible)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+
+        courseService.setCourseOrder(course, request.get("order"));
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/course-order/{course_id}")
+    public ResponseEntity<?> getCourseOrder(@PathVariable("course_id") long course_id) {
+        Course course = courseService.getCourseById(course_id);
+        if(course==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        HashMap<String, List<String>> map = new HashMap<>();
+        map.put("order", course.getCourseOrder());
         return ResponseEntity.ok(map);
     }
 

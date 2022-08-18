@@ -1,9 +1,9 @@
 package com.satset.mooc.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.util.LinkedList;
 import java.util.List;
 

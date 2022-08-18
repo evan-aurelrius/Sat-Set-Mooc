@@ -27,10 +27,10 @@ public class InstructorServiceImpl implements InstructorService{
     MailService mailService;
 
     @Override
-    public Instructor registerInstructor(String name, String gender, String image, String email, String password) {
+    public void registerInstructor(String name, String gender, String image, String email, String password) {
         dailyNewUserService.setDailyNewUser(false, true);
         mailService.sendMailToAllAdmin("Instructor Verification", "Hello, \n\nNew Instructor with the name "+name+" waiting for verification \n\nThanks.");
-        return instructorRepository.save(new Instructor(name, gender, image, email, password));
+        instructorRepository.save(new Instructor(name, gender, image, email, password));
     }
 
     @Override
@@ -98,12 +98,11 @@ public class InstructorServiceImpl implements InstructorService{
     }
 
     @Override
-    public Boolean addPendingCourseToDashboard(Instructor instructor) {
+    public void addPendingCourseToDashboard(Instructor instructor) {
         InstructorDashboard instructorDashboard = instructorDashboardRepository.findById(instructor.getId()).orElse(null);
-        if(instructorDashboard==null) return false;
+        if(instructorDashboard==null) return;
         instructorDashboard.setCreated_course(instructorDashboard.getCreated_course()+1);
         instructorDashboard.setPending_course(instructorDashboard.getPending_course()+1);
-        return true;
     }
 
     @Override
@@ -147,8 +146,7 @@ public class InstructorServiceImpl implements InstructorService{
 
     @Override
     public Boolean isValidated(Instructor instructor) {
-        if(instructor.getVerified_status().equalsIgnoreCase("Approved")) return true;
-        return  false;
+        return instructor.getVerified_status().equalsIgnoreCase("Approved");
     }
 
     @Override
@@ -159,9 +157,7 @@ public class InstructorServiceImpl implements InstructorService{
     @Override
     public Page<Instructor> getInstructorProposalPage(int page) {
         Pageable pageable = PageRequest.of(page-1,10);
-        Page<Instructor> instructorPage =
-                instructorRepository.findAllByVerified_status(pageable);
-        return instructorPage;
+        return instructorRepository.findAllByVerified_status(pageable);
     }
 
     @Override

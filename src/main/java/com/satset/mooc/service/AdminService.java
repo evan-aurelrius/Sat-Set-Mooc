@@ -1,7 +1,6 @@
 package com.satset.mooc.service;
 
 import com.satset.mooc.model.Admin;
-import com.satset.mooc.model.Instructor;
 import com.satset.mooc.model.response.AdminSummaryResponse;
 import com.satset.mooc.model.response.DailyNewUserResponse;
 import com.satset.mooc.model.response.TopCourseResponse;

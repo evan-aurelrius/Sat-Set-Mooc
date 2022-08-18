@@ -2,6 +2,7 @@ package com.satset.mooc.service;
 
 import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Lecture;
+import com.satset.mooc.model.Student;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface LectureService {
 
     void deleteLecture(Lecture lecture);
 
-    void addLectureProgress(long lecture_id, long student_id);
+    void addLectureProgress(Lecture lecture, Student student);
 
     long countCompletedLecture(long student_Id);
 }

@@ -1,7 +1,6 @@
 package com.satset.mooc.service;
 
 import com.satset.mooc.model.Admin;
-import com.satset.mooc.model.Course;
 import com.satset.mooc.model.response.AdminSummaryResponse;
 import com.satset.mooc.model.response.DailyNewUserResponse;
 import com.satset.mooc.model.response.TopCourseResponse;
@@ -10,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class AdminServiceImpl implements AdminService{
@@ -28,7 +30,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public Boolean authenticate(String email, String password) {
-        return adminRepository.findByEmailAndPassword(email, password).isPresent() ? true : false;
+        return adminRepository.findByEmailAndPassword(email, password).isPresent();
     }
 
     @Override
@@ -69,7 +71,7 @@ public class AdminServiceImpl implements AdminService{
 
     @Override
     public LinkedList<DailyNewUserResponse> getDailyNewUser() {
-        LinkedList<DailyNewUserResponse> lst = new LinkedList<>();
+        LinkedList<DailyNewUserResponse> lst;
 
         lst = dailyNewUserService.getDailyNewUser();
 

@@ -18,7 +18,7 @@ public class LectureServiceImpl implements LectureService{
     @Autowired @Lazy
     CourseService courseService;
     @Autowired
-    StudentService studentService;
+    StudentLectureService studentLectureService;
 
     @Override
     public Lecture getLectureById(long id) {
@@ -63,13 +63,8 @@ public class LectureServiceImpl implements LectureService{
     }
 
     @Override
-    public void addLectureProgress(long lecture_id, long student_id) {
-        Student student = studentService.getStudentById(student_id);
-        Lecture lecture = lectureRepository.findById(lecture_id).orElse(null);
-        studentService.addLecture(student, lecture);
-        if(lecture!=null)
-            lecture.addStudents(student);
-        save(lecture);
+    public void addLectureProgress(Lecture lecture, Student student) {
+        studentLectureService.addProgress(student.getId(), lecture.getId());
     }
 
     @Override
