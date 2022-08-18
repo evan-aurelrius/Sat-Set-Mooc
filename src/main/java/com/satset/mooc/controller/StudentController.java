@@ -3,6 +3,7 @@ package com.satset.mooc.controller;
 import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Lecture;
 import com.satset.mooc.model.dto.CourseDto;
+import com.satset.mooc.model.response.CourseResponse;
 import com.satset.mooc.model.response.StudentCourseResponse;
 import com.satset.mooc.model.response.StudentDashboardResponse;
 import com.satset.mooc.security.service.UserDetailsImpl;
@@ -10,6 +11,7 @@ import com.satset.mooc.service.CourseService;
 import com.satset.mooc.service.LectureService;
 import com.satset.mooc.service.StudentQuizService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@PreAuthorize("hasAuthority('student')")
 @RestController
 @RequestMapping("/api")
 public class StudentController {
@@ -51,13 +54,18 @@ public class StudentController {
     public ResponseEntity<?> getEnrolledCourse(@PathVariable("page") int page, Authentication authentication) {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         if(page<1 || principal.getId()<1) return ResponseEntity.badRequest().build();
-        List<StudentCourseResponse> courses = courseService.getStudentCourseWithPagination(page, principal.getId());
 
+        Page<Map<String, Object>> coursePage = courseService.getStudentCourseWithPagination(page, principal.getId());
         HashMap<String, Object> map = new HashMap<>();
+        List<StudentCourseResponse> courses = courseService.convertToListOfStudentCourseResponse(coursePage);
         map.put("data", courses);
-        map.put("next", "/api/enrolled-course/%d/".formatted(page+1));
-        if(page>1)
-            map.put("prev", "/api/enrolled-course/%d/".formatted(page-1));
+        if(coursePage.hasNext())
+            map.put("next", "/api/courses/%d/".formatted(page+1));
+        else
+            map.put("next","");
+
+        if(coursePage.hasPrevious())
+            map.put("prev", "/api/courses/%d/".formatted(page-1));
         else
             map.put("prev","");
 

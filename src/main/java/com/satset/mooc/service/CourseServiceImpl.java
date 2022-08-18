@@ -110,16 +110,29 @@ public class CourseServiceImpl implements CourseService{
     }
 
     @Override
-    public Page<Course> getCourseWithPagination(int page, long user_id) {
-        if(instructorService.getInstructorById(user_id)==null) return null;
+    public Page<Course> getAllCourseWithPagination(int page) {
         return courseRepository.findAll(PageRequest.of(page-1,10));
     }
 
     @Override
-    public List<StudentCourseResponse> getStudentCourseWithPagination(int page, long user_id) {
+    public List<CourseResponse> convertToListOfCourseResponse(Page<Course> coursePage) {
+        List<Course> rawLst = coursePage.toList();
+        List<CourseResponse> responseList = new ArrayList<>();
+        for(Course c:rawLst) {
+            responseList.add(new CourseResponse(c.getId(), c.getTitle(), c.getImage(), c.getStudents().size(), c.getInstructor().getName()));
+        }
+        return responseList;
+    }
+
+    @Override
+    public Page<Map<String, Object>> getStudentCourseWithPagination(int page, long user_id) {
         if(studentService.getStudentById(user_id)==null) return null;
-//        List<Course> rawLst = courseRepository.findAll(PageRequest.of(page-1,10)).toList();
-        List<Map<String, Object>> rawLst = courseRepository.findAllStudentCourseWithPagination(user_id, PageRequest.of(page-1,10)).toList();
+        return courseRepository.findAllStudentCourseWithPagination(user_id, PageRequest.of(page-1,10));
+    }
+
+    @Override
+    public List<StudentCourseResponse> convertToListOfStudentCourseResponse(Page<Map<String, Object>> studentCoursePage) {
+        List<Map<String, Object>> rawLst = studentCoursePage.toList();
         List<StudentCourseResponse> responseList = new ArrayList<>();
         for(Map<String, Object> c:rawLst) {
             responseList.add(new StudentCourseResponse(((BigInteger)c.get("id")).longValue(), c.get("title").toString(), c.get("image").toString(), c.get("instructor_name").toString(), ((BigInteger)c.get("total_content")).longValue(), ((BigInteger)c.get("completed_content")).longValue()));
@@ -128,13 +141,9 @@ public class CourseServiceImpl implements CourseService{
     }
 
     @Override
-    public List<CourseResponse> getAllCourseWithPagination(int page) {
-        List<Course> rawLst = courseRepository.findAll(PageRequest.of(page-1,10)).toList();
-        List<CourseResponse> responseList = new ArrayList<>();
-        for(Course c:rawLst) {
-            responseList.add(new CourseResponse(c.getId(), c.getTitle(), c.getImage(), c.getStudents().size(), c.getInstructor().getName()));
-        }
-        return responseList;
+    public Page<Course> getCourseWithPagination(int page, long user_id) {
+        if(instructorService.getInstructorById(user_id)==null) return null;
+        return courseRepository.findAll(PageRequest.of(page-1,10));
     }
 
     @Override
@@ -183,4 +192,6 @@ public class CourseServiceImpl implements CourseService{
     public long countCompletedCourse(long student_Id) {
         return courseRepository.findAllCompletedCourse(student_Id).stream().count();
     }
+
+
 }

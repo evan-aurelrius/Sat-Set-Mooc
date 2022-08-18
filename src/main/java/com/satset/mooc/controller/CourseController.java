@@ -34,14 +34,17 @@ public class CourseController {
     @GetMapping("/courses/{page}")
     public ResponseEntity<?> getCourse(@PathVariable("page") int page) {
         if(page<1) return ResponseEntity.badRequest().build();
-        List<CourseResponse> courses = courseService.getAllCourseWithPagination(page);
 
-//        TODO: Handle pagination problem, check page.hasNext() before put "next" to map
+        Page<Course> coursePage = courseService.getAllCourseWithPagination(page);
         HashMap<String, Object> map = new HashMap<>();
+        List<CourseResponse> courses = courseService.convertToListOfCourseResponse(coursePage);
         map.put("data", courses);
-        map.put("next", "/api/course/%d/".formatted(page+1));
-        if(page>1)
-            map.put("prev", "/api/course/%d/".formatted(page-1));
+        if(coursePage.hasNext()) {
+            map.put("next", "/api/courses/%d/".formatted(page+1));
+        } else map.put("next","");
+
+        if(coursePage.hasPrevious())
+            map.put("prev", "/api/courses/%d/".formatted(page-1));
         else
             map.put("prev","");
 
