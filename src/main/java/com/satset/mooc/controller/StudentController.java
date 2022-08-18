@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,6 +45,7 @@ public class StudentController {
         var course_id = Long.valueOf((Integer)request.get("course_id"));
         Course course = courseService.getCourseById(course_id);
         if(course==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(Boolean.FALSE.equals(courseService.isValidated(course))) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         courseService.enroll(course_id, principal.getId());

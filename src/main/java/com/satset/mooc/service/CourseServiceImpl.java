@@ -112,7 +112,7 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     public Page<Course> getAllCourseWithPagination(int page) {
-        return courseRepository.findAll(PageRequest.of(page-1,10));
+        return courseRepository.findAllByStatus("Approved",PageRequest.of(page-1,10));
     }
 
     @Override
@@ -191,6 +191,11 @@ public class CourseServiceImpl implements CourseService{
     @Override
     public long countCompletedCourse(long student_Id) {
         return courseRepository.findAllCompletedCourse(student_Id).stream().count();
+    }
+
+    @Override
+    public Boolean isValidated(Course course) {
+        return course.getStatus().equalsIgnoreCase("Approved");
     }
 
     @Override

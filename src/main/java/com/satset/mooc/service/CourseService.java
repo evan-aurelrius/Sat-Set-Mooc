@@ -69,5 +69,6 @@ public interface CourseService {
 
     long countCompletedCourse(long student_Id);
 
+    Boolean isValidated(Course course);
 
 }
