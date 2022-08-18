@@ -17,4 +17,6 @@ public interface StudentQuizService {
     Boolean quizAvailable(Student student, Quiz quiz);
 
     StudentQuiz generateResult(Student student, Quiz quiz, List<Question> questions, List<String> answers);
+
+    long countCompletedQuiz(long student_Id);
 }

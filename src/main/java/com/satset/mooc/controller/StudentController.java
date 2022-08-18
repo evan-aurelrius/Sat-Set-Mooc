@@ -4,9 +4,11 @@ import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Lecture;
 import com.satset.mooc.model.dto.CourseDto;
 import com.satset.mooc.model.response.StudentCourseResponse;
+import com.satset.mooc.model.response.StudentDashboardResponse;
 import com.satset.mooc.security.service.UserDetailsImpl;
 import com.satset.mooc.service.CourseService;
 import com.satset.mooc.service.LectureService;
+import com.satset.mooc.service.StudentQuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +31,9 @@ public class StudentController {
 
     @Autowired
     LectureService lectureService;
+
+    @Autowired
+    StudentQuizService studentQuizService;
 
     @PostMapping("/enroll")
     public ResponseEntity<String> enrollCourse(@RequestBody Map<String, Object> request, Authentication authentication) {
@@ -60,7 +65,7 @@ public class StudentController {
     }
 
     @PostMapping("/progress/{lecture_id}")
-    public ResponseEntity<String> enrollCourse(@PathVariable("lecture_id") long lecture_id, Authentication authentication) {
+    public ResponseEntity<String> addProgressLecture(@PathVariable("lecture_id") long lecture_id, Authentication authentication) {
         Lecture lecture = lectureService.getLectureById(lecture_id);
         if(lecture==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
@@ -68,5 +73,22 @@ public class StudentController {
         lectureService.addLectureProgress(lecture_id, principal.getId());
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/student-dashboard")
+    public ResponseEntity<?> studentDashboard(Authentication authentication) {
+        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
+        if(principal.getId()<1) return ResponseEntity.badRequest().build();
+
+        var countEnrolledCourse = courseService.countEnrolledCourse(principal.getId());
+        var countCompletedCourse = courseService.countCompletedCourse(principal.getId());
+        var countCompletedLecture = lectureService.countCompletedLecture(principal.getId());
+        var countCompletedQuiz = studentQuizService.countCompletedQuiz(principal.getId());
+        StudentDashboardResponse studentDashboardResponse = new StudentDashboardResponse(countEnrolledCourse, countCompletedCourse, countCompletedLecture, countCompletedQuiz);
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("data", studentDashboardResponse);
+
+        return ResponseEntity.ok(map);
     }
 }

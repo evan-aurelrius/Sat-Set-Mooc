@@ -170,4 +170,14 @@ public class CourseServiceImpl implements CourseService{
         }
         return lst;
     }
+
+    @Override
+    public long countEnrolledCourse(long student_Id) {
+        return courseRepository.findAllByStudent(student_Id).stream().count();
+    }
+
+    @Override
+    public long countCompletedCourse(long student_Id) {
+        return courseRepository.findAllCompletedCourse(student_Id).stream().count();
+    }
 }

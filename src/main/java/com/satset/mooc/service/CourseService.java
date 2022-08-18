@@ -51,4 +51,8 @@ public interface CourseService {
     Page<Course> getCourseProposalPage(int page);
 
     List<CourseProposalResponse> convertToListOfCourseProposalResponse(Page<Course> coursePage);
+
+    long countEnrolledCourse(long student_id);
+
+    long countCompletedCourse(long student_Id);
 }

@@ -34,7 +34,7 @@ public class Lecture {
     private Course course;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "student_lecture", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
+    @JoinTable(name = "student_lecture", joinColumns = @JoinColumn(name = "lecture_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
     @JsonIgnore
     private Set<Student> students = new LinkedHashSet<>();
 

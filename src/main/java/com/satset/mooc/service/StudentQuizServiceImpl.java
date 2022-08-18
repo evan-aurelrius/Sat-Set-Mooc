@@ -58,4 +58,9 @@ public class StudentQuizServiceImpl implements StudentQuizService{
 
         return updateQuizScore(student, quiz, score, answerFeedback.toString());
     }
+
+    @Override
+    public long countCompletedQuiz(long student_Id) {
+        return studentQuizRepository.findAllCompletedQuiz(student_Id).stream().count();
+    }
 }

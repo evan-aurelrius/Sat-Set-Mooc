@@ -72,4 +72,9 @@ public class LectureServiceImpl implements LectureService{
         save(lecture);
     }
 
+    @Override
+    public long countCompletedLecture(long student_Id) {
+        return lectureRepository.findAllCompletedLecture(student_Id).stream().count();
+    }
+
 }
