@@ -82,6 +82,8 @@ public class StudentController {
 
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         Student student = studentService.getStudentById(principal.getId());
+        if(Boolean.FALSE.equals(studentService.lectureEligibilityCheck(student,lecture))) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
         lectureService.addLectureProgress(lecture, student);
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);

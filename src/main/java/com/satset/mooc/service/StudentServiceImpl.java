@@ -1,6 +1,7 @@
 package com.satset.mooc.service;
 
 import com.satset.mooc.model.Course;
+import com.satset.mooc.model.Lecture;
 import com.satset.mooc.model.Quiz;
 import com.satset.mooc.model.Student;
 import com.satset.mooc.repository.StudentRepository;
@@ -14,6 +15,8 @@ public class StudentServiceImpl implements StudentService {
     StudentRepository studentRepository;
     @Autowired
     StudentQuizService studentQuizService;
+    @Autowired
+    StudentLectureService studentLectureService;
     @Autowired
     DailyNewUserService dailyNewUserService;
 
@@ -53,6 +56,12 @@ public class StudentServiceImpl implements StudentService {
     public Boolean quizEligibilityCheck(Student student, Quiz quiz) {
         if(Boolean.FALSE.equals(student.getEnrolledClass().contains(quiz.getCourse()))) return false;
         return !Boolean.FALSE.equals(studentQuizService.quizAvailable(student, quiz));
+    }
+
+    @Override
+    public Boolean lectureEligibilityCheck(Student student, Lecture lecture) {
+        if(Boolean.FALSE.equals(student.getEnrolledClass().contains(lecture.getCourse()))) return false;
+        return !Boolean.FALSE.equals(studentLectureService.lectureAvailable(student, lecture));
     }
 
     @Override

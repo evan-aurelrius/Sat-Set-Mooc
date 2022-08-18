@@ -1,7 +1,6 @@
 package com.satset.mooc.service;
 
-import com.satset.mooc.model.StudentLecture;
-import com.satset.mooc.model.StudentLectureKey;
+import com.satset.mooc.model.*;
 import com.satset.mooc.repository.StudentLectureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,5 +19,11 @@ public class StudentLectureServiceImpl implements StudentLectureService{
     @Override
     public void addProgress(long student_id, long lecture_id) {
         studentLectureRepository.save(new StudentLecture(new StudentLectureKey(student_id, lecture_id)));
+    }
+
+    @Override
+    public Boolean lectureAvailable(Student student, Lecture lecture) {
+        StudentLecture studentLecture = studentLectureRepository.findByStudent_idAndLecture_id(student.getId(), lecture.getId()).orElse(null);
+        return studentLecture != null;
     }
 }

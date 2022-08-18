@@ -1,6 +1,7 @@
 package com.satset.mooc.service;
 
 import com.satset.mooc.model.Course;
+import com.satset.mooc.model.Lecture;
 import com.satset.mooc.model.Quiz;
 import com.satset.mooc.model.Student;
 
@@ -19,6 +20,8 @@ public interface StudentService {
     void addCourse(Student student, Course course);
 
     Boolean quizEligibilityCheck(Student student, Quiz quiz);
+
+    Boolean lectureEligibilityCheck(Student student, Lecture lecture);
 
     long countAll();
 }
