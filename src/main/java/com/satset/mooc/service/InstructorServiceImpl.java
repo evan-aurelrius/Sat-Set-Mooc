@@ -23,10 +23,13 @@ public class InstructorServiceImpl implements InstructorService{
     InstructorDashboardRepository instructorDashboardRepository;
     @Autowired
     DailyNewUserService dailyNewUserService;
+    @Autowired
+    MailService mailService;
 
     @Override
     public Instructor registerInstructor(String name, String gender, String image, String email, String password) {
         dailyNewUserService.setDailyNewUser(false, true);
+        mailService.sendAdminVerifyInstructor("Instructor Verification", "Hello, \n\nNew Instructor with the name "+name+" waiting for verification \n\nThanks.");
         return instructorRepository.save(new Instructor(name, gender, image, email, password));
     }
 

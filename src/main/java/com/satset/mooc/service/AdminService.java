@@ -24,4 +24,6 @@ public interface AdminService {
     List<TopCourseResponse> getTopCourse();
 
     LinkedList<DailyNewUserResponse> getDailyNewUser();
+
+    List<Admin> getAllAdmins();
 }
