@@ -1,6 +1,5 @@
 package com.satset.mooc.model;
 
-import com.satset.mooc.model.dto.AdminDto;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
@@ -22,22 +21,10 @@ public class Admin{
     @Column(name = "password")
     private String password;
 
-    @Column(name = "role")
-    private final String role = "admin";
-
-//    @Column(name = "token", unique = true)
-//    private String token;
-
     public Admin(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
-//        this.token = token;
-    }
-
-    public Admin(AdminDto adminDto) {
-        this.email = adminDto.getEmail();
-        this.password = adminDto.getPassword();
     }
 
     public String getName() {

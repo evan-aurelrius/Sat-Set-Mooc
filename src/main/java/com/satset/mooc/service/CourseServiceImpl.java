@@ -1,10 +1,7 @@
 package com.satset.mooc.service;
 
 import com.satset.mooc.model.*;
-import com.satset.mooc.model.response.CourseProposalResponse;
-import com.satset.mooc.model.response.CourseResponse;
-import com.satset.mooc.model.response.InstructorCourseResponse;
-import com.satset.mooc.model.response.StudentCourseResponse;
+import com.satset.mooc.model.response.*;
 import com.satset.mooc.repository.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,6 +27,10 @@ public class CourseServiceImpl implements CourseService{
     QuizService quizService;
     @Autowired
     StudentService studentService;
+    @Autowired
+    StudentLectureService studentLectureService;
+    @Autowired
+    StudentQuizService studentQuizService;
 
     @Override
     public Iterable<Course> getCourse(Pageable pageable) {
@@ -157,17 +158,70 @@ public class CourseServiceImpl implements CourseService{
     @Override
     public Page<Course> getCourseProposalPage(int page) {
         Pageable pageable = PageRequest.of(page-1,10);
-        Page<Course> coursePage = courseRepository.findAllByVerified_status(pageable);
-        return coursePage;
+        return courseRepository.findAllByVerified_status(pageable);
     }
 
     @Override
     public List<CourseProposalResponse> convertToListOfCourseProposalResponse(Page<Course> coursePage) {
         List<Course> rawLst = coursePage.toList();
         List<CourseProposalResponse> lst = new ArrayList<>();
-        for(Course c:rawLst) {
+        for (Course c : rawLst) {
             lst.add(new CourseProposalResponse(c.getId(), c.getTitle(), c.getImage(), c.getInstructor().getName()));
         }
         return lst;
     }
+
+    @Override
+    public Boolean eligibilityCheck(Course course, Instructor instructor) {
+        return !Boolean.FALSE.equals(instructor.getCourseOwned().contains(course));
+    }
+
+    @Override
+    public Boolean enrolledCheck(Course course, Student student) {
+        return !Boolean.FALSE.equals(student.getEnrolledClass().contains(course));
+    }
+
+    @Override
+    public void fillCourseDetailResponseData(CourseDetailResponse courseDetailResponse, Object user) {
+        if(user instanceof Student) {
+            long user_id = ((Student)user).getId();
+            setLectureStatus(courseDetailResponse.getLectures(), user_id);
+            setQuizStatus(courseDetailResponse.getQuizzes(), user_id);
+        }
+    }
+
+    public void setLectureStatus(List<CourseDetailLectureResponse> cdlr, long user_id) {
+        StudentLecture studentLecture;
+        for(CourseDetailLectureResponse c:cdlr) {
+            studentLecture = studentLectureService.getStudentLectureByStudentIdAndLectureId(user_id, c.getId());
+            if(studentLecture!=null) c.setIs_completed(true);
+        }
+    }
+
+    public void setQuizStatus(List<CourseDetailQuizResponse> cdqr, long user_id) {
+        StudentQuiz studentQuiz;
+        for(CourseDetailQuizResponse c:cdqr) {
+            studentQuiz = studentQuizService.getStudentQuizByStudentIdAndQuizId(user_id, c.getId());
+            if(studentQuiz!=null) c.setScore(studentQuiz.getScore());
+        }
+    }
+
+    @Override
+    public void setCourseOrder(Course course, List<String> order) {
+        course.setCourseOrder(order);
+        save(course);
+    }
+
+    @Override
+    public Boolean eligibilityCheck(Course course, long user_id) {
+        Instructor instructor = instructorService.getInstructorById(user_id);
+        if(instructor==null) {
+            Student student = studentService.getStudentById(user_id);
+            if(student==null) return false;
+            return student.getEnrolledClass().contains(course);
+        } else {
+            return instructor.getCourseOwned().contains(course);
+        }
+    }
+
 }

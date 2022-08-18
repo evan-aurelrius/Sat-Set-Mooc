@@ -3,8 +3,6 @@ package com.satset.mooc.service;
 import com.satset.mooc.model.DailyNewUser;
 import com.satset.mooc.model.response.DailyNewUserResponse;
 import com.satset.mooc.repository.DailyNewUserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +19,8 @@ public class DailyNewUserServiceImpl implements DailyNewUserService{
 
     @Override
     public LinkedList<DailyNewUserResponse> getDailyNewUser() {
-        Logger logger = LoggerFactory.getLogger(DailyNewUserServiceImpl.class);
         LinkedList<DailyNewUserResponse> lst = new LinkedList<>();
-        LinkedList<DailyNewUser> rawLst = new LinkedList<>();
+        LinkedList<DailyNewUser> rawLst;
         DailyNewUser latestDailyNewUser = dailyNewUserRepository.findFirstByOrderByDateDesc();
 
         long difference = countDaysDifferent(latestDailyNewUser.getDate().toLocalDate());

@@ -2,17 +2,15 @@ package com.satset.mooc.controller;
 
 import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Lecture;
-import com.satset.mooc.model.dto.CourseDto;
+import com.satset.mooc.model.Student;
 import com.satset.mooc.model.response.StudentCourseResponse;
 import com.satset.mooc.security.service.UserDetailsImpl;
 import com.satset.mooc.service.CourseService;
 import com.satset.mooc.service.LectureService;
+import com.satset.mooc.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +24,10 @@ public class StudentController {
 
     @Autowired
     CourseService courseService;
-
     @Autowired
     LectureService lectureService;
+    @Autowired
+    StudentService studentService;
 
     @PostMapping("/enroll")
     public ResponseEntity<String> enrollCourse(@RequestBody Map<String, Object> request, Authentication authentication) {
@@ -60,12 +59,13 @@ public class StudentController {
     }
 
     @PostMapping("/progress/{lecture_id}")
-    public ResponseEntity<String> enrollCourse(@PathVariable("lecture_id") long lecture_id, Authentication authentication) {
+    public ResponseEntity<String> updateLectureProgress(@PathVariable("lecture_id") long lecture_id, Authentication authentication) {
         Lecture lecture = lectureService.getLectureById(lecture_id);
         if(lecture==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
-        lectureService.addLectureProgress(lecture_id, principal.getId());
+        Student student = studentService.getStudentById(principal.getId());
+        lectureService.addLectureProgress(lecture, student);
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }

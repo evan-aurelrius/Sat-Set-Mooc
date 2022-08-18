@@ -12,10 +12,10 @@ public class StudentQuiz {
     @EmbeddedId
     private StudentQuizKey studentQuizKey;
 
-    @Column(name = "")
+    @Column()
     private int score;
 
-    @Column(name = "")
+    @Column()
     private String answer_feedback;
 
     public StudentQuiz(StudentQuizKey studentQuizKey) {

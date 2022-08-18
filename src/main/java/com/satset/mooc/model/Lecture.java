@@ -3,14 +3,14 @@ package com.satset.mooc.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name="lecture")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Lecture {
@@ -32,11 +32,6 @@ public class Lecture {
     @JoinColumn(name = "course_id")
     @JsonIgnore
     private Course course;
-
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "student_lecture", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
-    @JsonIgnore
-    private Set<Student> students = new LinkedHashSet<>();
 
     public Lecture(String title, String link) {
         this.title = title;
@@ -71,15 +66,4 @@ public class Lecture {
         this.course = course;
     }
 
-    public Set<Student> getStudents() {
-        return students;
-    }
-
-    public void setStudents(Set<Student> students) {
-        this.students = students;
-    }
-
-    public void addStudents(Student student) {
-        this.students.add(student);
-    }
 }

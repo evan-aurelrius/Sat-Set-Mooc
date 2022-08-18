@@ -3,8 +3,6 @@ package com.satset.mooc.security.service;
 import com.satset.mooc.model.Admin;
 import com.satset.mooc.model.Instructor;
 import com.satset.mooc.model.Student;
-import com.satset.mooc.repository.InstructorRepository;
-import com.satset.mooc.repository.StudentRepository;
 import com.satset.mooc.service.AdminService;
 import com.satset.mooc.service.InstructorService;
 import com.satset.mooc.service.StudentService;

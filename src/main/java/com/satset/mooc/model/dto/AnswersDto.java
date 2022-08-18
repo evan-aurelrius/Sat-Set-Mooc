@@ -1,8 +1,6 @@
 package com.satset.mooc.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.satset.mooc.model.Course;
-import com.satset.mooc.model.Question;
 import lombok.Data;
 
 import java.util.LinkedList;

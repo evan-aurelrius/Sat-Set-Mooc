@@ -9,8 +9,6 @@ import com.satset.mooc.model.Student;
 import lombok.Data;
 
 import java.sql.Timestamp;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -32,16 +30,16 @@ public class CourseDto {
 
     private Instructor instructor;
 
-    private Set<Student> students = new LinkedHashSet<>();
+    private Set<Student> students;
 
     @JsonProperty("lectures")
-    private List<Lecture> lectures = new LinkedList<>();
+    private List<Lecture> lectures;
 
     @JsonProperty("quizzes")
-    private List<Quiz> quizzes = new LinkedList<>();
+    private List<Quiz> quizzes;
 
     @JsonProperty("order")
-    private List<String> courseOrder = new LinkedList<>();
+    private List<String> courseOrder;
 
     public CourseDto(String title, String description, String image, Instructor instructor, Set<Student> students, List<Lecture> lectures, List<Quiz> quizzes, List<String> courseOrder) {
         this.title = title;

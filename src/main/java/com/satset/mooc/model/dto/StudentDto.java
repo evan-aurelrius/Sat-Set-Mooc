@@ -13,16 +13,5 @@ public class StudentDto {
     private String createdAt;
     private String password;
 
-    public StudentDto(long id, String name, String gender, String image, String email, String role, String createdAt, String password) {
-        this.id = id;
-        this.name = name;
-        this.gender = gender;
-        this.image = image;
-        this.email = email;
-        this.role = role;
-        this.createdAt = createdAt;
-        this.password = password;
-    }
-
     public StudentDto() {}
 }

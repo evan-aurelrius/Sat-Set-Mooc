@@ -24,7 +24,7 @@ public class InstructorController {
     @Autowired
     InstructorService instructorService;
 
-    private ModelMapper modelMapper = MapperUtil.getInstance();
+    final private ModelMapper modelMapper = MapperUtil.getInstance();
 
     @GetMapping("/instructor-dashboard")
     public ResponseEntity<?> getDashboard(Authentication authentication) {

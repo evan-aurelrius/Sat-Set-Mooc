@@ -1,5 +1,6 @@
 package com.satset.mooc.model;
 
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -7,6 +8,7 @@ import java.util.*;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name="instructor")
 public class Instructor {
     @Id
@@ -34,9 +36,6 @@ public class Instructor {
 
     @Column(name = "timestamp")
     private Timestamp created_at;
-
-//    @Column(name = "token", unique = true)
-//    private String token;
 
     @OneToMany(mappedBy = "instructor")
     private Set<Course> courseOwned = new LinkedHashSet<>();
@@ -71,20 +70,8 @@ public class Instructor {
         this.image = image;
     }
 
-//    public String getToken() {
-//        return token;
-//    }
-//
-//    public void setToken(String token) {
-//        this.token = token;
-//    }
-
     public Set<Course> getCourseOwned() {
         return courseOwned;
-    }
-
-    public void setCourseOwned(Set<Course> courseOwned) {
-        this.courseOwned = courseOwned;
     }
 
     public void addCourseOwned(Course course) {
@@ -113,14 +100,6 @@ public class Instructor {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String printAllCourseName() {
-        String s = "";
-        for(Course c:courseOwned) {
-            s += c.getTitle() + " ";
-        }
-        return s;
     }
 
     public String getVerified_status() {

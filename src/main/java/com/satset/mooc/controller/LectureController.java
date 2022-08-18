@@ -28,7 +28,7 @@ public class LectureController {
     @Autowired
     InstructorService instructorService;
 
-    private ModelMapper modelMapper= MapperUtil.getInstance();
+    final private ModelMapper modelMapper= MapperUtil.getInstance();
 
     @PostMapping("/api/course/{course_id}/lecture")
     public ResponseEntity<?> addLecture(@PathVariable("course_id") long course_id, @RequestBody LectureDto lectureDto, Authentication authentication) {
@@ -61,7 +61,7 @@ public class LectureController {
     }
 
     @DeleteMapping("/api/lecture/{lecture_id}")
-    public ResponseEntity<String> addLecture(@PathVariable("lecture_id") long lecture_id, Authentication authentication) {
+    public ResponseEntity<String> deleteLecture(@PathVariable("lecture_id") long lecture_id, Authentication authentication) {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         long user_id = principal.getId();
         Instructor instructor = instructorService.getInstructorById(user_id);

@@ -1,7 +1,6 @@
 package com.satset.mooc.service;
 
 import com.satset.mooc.model.Course;
-import com.satset.mooc.model.Lecture;
 import com.satset.mooc.model.Quiz;
 import com.satset.mooc.model.Student;
 import com.satset.mooc.repository.StudentRepository;
@@ -19,9 +18,9 @@ public class StudentServiceImpl implements StudentService {
     DailyNewUserService dailyNewUserService;
 
     @Override
-    public Student registerStudent(String name, String gender, String image, String email, String password) {
+    public void registerStudent(String name, String gender, String image, String email, String password) {
         dailyNewUserService.setDailyNewUser(true,true);
-        return studentRepository.save(new Student(name, gender, image, email, password));
+        studentRepository.save(new Student(name, gender, image, email, password));
     }
 
     @Override
@@ -47,12 +46,6 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void addCourse(Student student, Course course) {
         student.addEnrolledClass(course);
-        studentRepository.save(student);
-    }
-
-    @Override
-    public void addLecture(Student student, Lecture lecture) {
-        student.addLectureProgress(lecture);
         studentRepository.save(student);
     }
 
