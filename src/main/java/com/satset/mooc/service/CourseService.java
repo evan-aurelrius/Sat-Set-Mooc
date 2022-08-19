@@ -31,11 +31,15 @@ public interface CourseService {
 
     void enroll(Long course_id, Long student_id);
 
+    Page<Course> getAllCourseWithPagination(int page);
+
+    List<CourseResponse> convertToListOfCourseResponse(Page<Course> coursePage);
+
+    Page<Map<String, Object>> getStudentCourseWithPagination(int page, long user_id);
+
+    List<StudentCourseResponse> convertToListOfStudentCourseResponse(Page<Map<String, Object>> coursePage);
+
     Page<Course> getCourseWithPagination(int page, long user_id);
-
-    List<StudentCourseResponse> getStudentCourseWithPagination(int page, long user_id);
-
-    List<CourseResponse> getAllCourseWithPagination(int page);
 
     List<InstructorCourseResponse> convertToListOfInstructorCourseResponse(Page<Course> coursePage);
 
@@ -64,4 +68,7 @@ public interface CourseService {
     long countEnrolledCourse(long student_id);
 
     long countCompletedCourse(long student_Id);
+
+    Boolean isValidated(Course course);
+
 }

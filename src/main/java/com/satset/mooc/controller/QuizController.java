@@ -156,15 +156,17 @@ public class QuizController {
     }
 
     @PostMapping("/quiz/{quiz_id}")
-    public ResponseEntity<?> submitQuiz(@PathVariable("quiz_id") long quiz_id, @RequestBody Map<String, List<String>> request, Authentication authentication) {
-        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
-        Student student = studentService.getStudentById(principal.getId());
-
+    public ResponseEntity<?> submitQuiz(@PathVariable("quiz_id") long quiz_id, @RequestBody Map<String, Object> request, Authentication authentication) {
         Quiz quiz = quizService.getQuizById(quiz_id);
         if(quiz==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        List<Question> questions = quiz.getQuestions();
 
-        List<String> answers = request.get("answers");
+        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
+        Student student = studentService.getStudentById(principal.getId());
+        boolean isEligible =  studentService.quizEligibilityCheck(student, quiz);
+        if (Boolean.FALSE.equals(isEligible)) return ResponseEntity.badRequest().build();
+
+        List<Question> questions = quiz.getQuestions();
+        List<String> answers = (List<String>) request.get("answers");
         StudentQuiz studentQuiz = studentQuizService.generateResult(student, quiz, questions, answers);
 
         HashMap<String, Object> map = new HashMap<>();

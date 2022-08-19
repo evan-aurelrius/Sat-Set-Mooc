@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface InstructorService {
 
-    void registerInstructor(String name, String gender, String image, String email, String password);
+    Instructor registerInstructor(String name, String gender, String image, String email, String password);
 
     Boolean instructorExist(String email);
 

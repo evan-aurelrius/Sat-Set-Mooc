@@ -30,19 +30,19 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
 
     @Query(value = """
             SELECT course.id,
-            course.title,\s
-            course.image,\s
+            course.title,
+            course.image,
             instructor.name instructor_name,
             count(lecture.id+quiz.id) total_content,
-            count(student_lecture.student_id+student_quiz.student_id) completed_content
-            from course\s
+            count(student_lecture_status.student_id+student_quiz.student_id) completed_content
+            from course
             JOIN student_enroll_course on course.id = student_enroll_course.course_id
-            JOIN lecture on course.id = lecture.course_id
-            JOIN quiz on course.id = quiz.course_id
-            LEFT JOIN student_lecture on course.id = student_lecture.course_id
+            LEFT JOIN lecture on course.id = lecture.course_id
+            LEFT JOIN quiz on course.id = quiz.course_id
+            LEFT JOIN student_lecture_status on lecture.id = student_lecture_status.lecture_id
             LEFT JOIN student_quiz on quiz.id = student_quiz.quiz_id
-            JOIN instructor on course.instructor_id = course.id
-            WHERE student_enroll_course.student_id = ?1 GROUP BY course.id, instructor.id""", nativeQuery = true)
+            JOIN instructor on course.instructor_id = instructor.id
+            WHERE student_enroll_course.student_id = 1 GROUP BY course.id, instructor.id""", nativeQuery = true)
     Page<Map<String, Object>> findAllStudentCourseWithPagination(long student_id, Pageable pageable);
     
     @Query(value = "select c from Course as c where c.status='Pending'")
@@ -51,22 +51,24 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     @Query(nativeQuery = true, value = "select * from course join student_enroll_course on course.id = student_enroll_course.course_id where student_id = ?1 ")
     List<Map<String, Object>> findAllByStudent(long student_id);
 
-    @Query(nativeQuery = true, value = "SELECT course.id\n" +
-            "from course \n" +
-            "JOIN student_enroll_course on course.id = student_enroll_course.course_id\n" +
-            "JOIN lecture on course.id = lecture.course_id\n" +
-            "JOIN quiz on course.id = quiz.course_id\n" +
-            "LEFT JOIN student_lecture on course.id = student_lecture.lecture_id\n" +
-            "LEFT JOIN student_quiz on quiz.id = student_quiz.quiz_id\n" +
-            "JOIN instructor on course.instructor_id = course.id\n" +
-            "WHERE \n" +
-            "student_enroll_course.student_id = 1 \n" +
-            "GROUP BY \n" +
-            "course.id, instructor.id\n" +
-            "HAVING\n" +
-            "count(lecture.id+quiz.id) = count(student_lecture.student_id+student_quiz.student_id)")
+    @Query(nativeQuery = true, value = """
+            SELECT course.id
+            from course
+            JOIN student_enroll_course on course.id = student_enroll_course.course_id
+            LEFT JOIN lecture on course.id = lecture.course_id
+            LEFT JOIN quiz on course.id = quiz.course_id
+            LEFT JOIN student_lecture_status on lecture.id = student_lecture_status.lecture_id
+            LEFT JOIN student_quiz on quiz.id = student_quiz.quiz_id
+            JOIN instructor on course.instructor_id = course.id
+            WHERE
+            student_enroll_course.student_id = 1
+            GROUP BY\s
+            course.id, instructor.id
+            HAVING
+            count(lecture.id+quiz.id) = count(student_lecture_status.student_id+student_quiz.student_id)""")
     List<Map<String, Object>> findAllCompletedCourse(long student_id);
 
     @Query(value = "select * from course where instructor_id = ?1", nativeQuery = true)
     Page<Course> findOnlyMyCourses(long user_id, Pageable pageable);
+    Page<Course> findAllByStatus(String status, Pageable pageable);
 }
