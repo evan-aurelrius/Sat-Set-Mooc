@@ -1,5 +1,6 @@
 package com.satset.mooc.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
@@ -28,6 +29,7 @@ public class Instructor {
     @Column(name = "email", unique = true)
     private String email;
 
+    @JsonIgnore
     @Column(name = "password")
     private String password;
 

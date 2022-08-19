@@ -27,10 +27,10 @@ public class InstructorServiceImpl implements InstructorService{
     MailService mailService;
 
     @Override
-    public void registerInstructor(String name, String gender, String image, String email, String password) {
+    public Instructor registerInstructor(String name, String gender, String image, String email, String password) {
         dailyNewUserService.setDailyNewUser(false, true);
         mailService.sendMailToAllAdmin("Instructor Verification", "Hello, \n\nNew Instructor with the name "+name+" waiting for verification \n\nThanks.");
-        instructorRepository.save(new Instructor(name, gender, image, email, password));
+        return instructorRepository.save(new Instructor(name, gender, image, email, password));
     }
 
     @Override
