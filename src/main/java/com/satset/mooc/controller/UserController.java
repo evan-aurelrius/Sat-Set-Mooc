@@ -37,6 +37,10 @@ public class UserController {
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest request){
         HashMap<String, Object> map = new HashMap<>();
         var userData = userUtil.getJwt(request);
+        if (userData.getRole().equalsIgnoreCase("instructor")){
+            Instructor instructor = instructorService.getInstructorById(userData.getId());
+            if(Boolean.FALSE.equals(instructorService.isValidated(instructor))) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
 
         map.put("data", userData);
 
