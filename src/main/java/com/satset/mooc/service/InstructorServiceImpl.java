@@ -53,7 +53,7 @@ public class InstructorServiceImpl implements InstructorService{
         if(!instructor.getVerified_status().equalsIgnoreCase("Approved")) {
             if(status.equalsIgnoreCase("Rejected")) {
                 dailyNewUserService.setDailyNewUser(false, false);
-                mailService.sendMailToAllAdmin("Instructor Verification", "Hello, \n\nSorry, your account registration was not approved by the admin \n\nThanks.");
+                mailService.sendMail(instructor.getEmail(),"Instructor Verification", "Hello, \n\nSorry, your account registration was not approved by the admin \n\nThanks.");
                 delete(instructor);
                 return true;
             }
