@@ -5,6 +5,8 @@ import com.satset.mooc.model.InstructorDashboard;
 import com.satset.mooc.model.response.InstructorProposalResponse;
 import com.satset.mooc.repository.InstructorDashboardRepository;
 import com.satset.mooc.repository.InstructorRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +32,8 @@ public class InstructorServiceImpl implements InstructorService{
     public Instructor registerInstructor(String name, String gender, String image, String email, String password) {
         dailyNewUserService.setDailyNewUser(false, true);
         mailService.sendMailToAllAdmin("Instructor Verification", "Hello, \n\nNew Instructor with the name "+name+" waiting for verification \n\nThanks.");
+        Logger logger = LoggerFactory.getLogger(CourseServiceImpl.class);
+        logger.warn("Done");
         return instructorRepository.save(new Instructor(name, gender, image, email, password));
     }
 
