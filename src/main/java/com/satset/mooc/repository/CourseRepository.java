@@ -2,6 +2,7 @@ package com.satset.mooc.repository;
 
 import com.satset.mooc.model.Course;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -66,4 +67,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "count(lecture.id+quiz.id) = count(student_lecture.student_id+student_quiz.student_id)")
     List<Map<String, Object>> findAllCompletedCourse(long student_id);
 
+    @Query(value = "select * from course where instructor_id = ?1", nativeQuery = true)
+    Page<Course> findOnlyMyCourses(long user_id, Pageable pageable);
 }

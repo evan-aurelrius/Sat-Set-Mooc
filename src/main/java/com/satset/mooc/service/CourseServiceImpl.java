@@ -113,13 +113,12 @@ public class CourseServiceImpl implements CourseService{
     @Override
     public Page<Course> getCourseWithPagination(int page, long user_id) {
         if(instructorService.getInstructorById(user_id)==null) return null;
-        return courseRepository.findAll(PageRequest.of(page-1,10));
+        return courseRepository.findOnlyMyCourses(user_id, PageRequest.of(page-1,10));
     }
 
     @Override
     public List<StudentCourseResponse> getStudentCourseWithPagination(int page, long user_id) {
         if(studentService.getStudentById(user_id)==null) return null;
-//        List<Course> rawLst = courseRepository.findAll(PageRequest.of(page-1,10)).toList();
         List<Map<String, Object>> rawLst = courseRepository.findAllStudentCourseWithPagination(user_id, PageRequest.of(page-1,10)).toList();
         List<StudentCourseResponse> responseList = new ArrayList<>();
         for(Map<String, Object> c:rawLst) {

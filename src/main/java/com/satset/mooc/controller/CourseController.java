@@ -50,8 +50,6 @@ public class CourseController {
         if(principal.getRole().equals("instructor")) {
             user = instructorService.getInstructorById(user_id);
             if(Boolean.FALSE.equals(instructorService.isValidated((Instructor) user))) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-            Boolean isEligibleInstructor = courseService.eligibilityCheck(course, (Instructor) user);
-            if(Boolean.FALSE.equals(isEligibleInstructor)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } else if(principal.getRole().equals("student"))
             user = studentService.getStudentById(user_id);
         else
