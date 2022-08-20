@@ -61,7 +61,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Boolean lectureEligibilityCheck(Student student, Lecture lecture) {
         if(Boolean.FALSE.equals(student.getEnrolledClass().contains(lecture.getCourse()))) return false;
-        return !Boolean.FALSE.equals(studentLectureService.lectureAvailable(student, lecture));
+        return true;
     }
 
     @Override
