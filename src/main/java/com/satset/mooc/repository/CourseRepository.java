@@ -32,8 +32,8 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             course.title,
             course.image,
             instructor.name instructor_name,
-            count(lecture.id+quiz.id) total_content,
-            count(student_lecture_status.student_id+student_quiz.student_id) completed_content
+            (count(DISTINCT lecture.id) + count(DISTINCT quiz.id)) total_content,
+            (count(DISTINCT student_lecture_status.lecture_id) + count(DISTINCT student_quiz.quiz_id)) completed_content
             from course
             JOIN student_enroll_course on course.id = student_enroll_course.course_id
             LEFT JOIN lecture on course.id = lecture.course_id
@@ -41,7 +41,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             LEFT JOIN student_lecture_status on lecture.id = student_lecture_status.lecture_id
             LEFT JOIN student_quiz on quiz.id = student_quiz.quiz_id
             JOIN instructor on course.instructor_id = instructor.id
-            WHERE student_enroll_course.student_id = 1 GROUP BY course.id, instructor.id""", nativeQuery = true)
+            WHERE student_enroll_course.student_id = ?1 GROUP BY course.id, instructor.id""", nativeQuery = true)
     Page<Map<String, Object>> findAllStudentCourseWithPagination(long student_id, Pageable pageable);
     
     @Query(value = "select c from Course as c where c.status='Pending'")
@@ -58,7 +58,7 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             LEFT JOIN quiz on course.id = quiz.course_id
             LEFT JOIN student_lecture_status on lecture.id = student_lecture_status.lecture_id
             LEFT JOIN student_quiz on quiz.id = student_quiz.quiz_id
-            JOIN instructor on course.instructor_id = course.id
+            JOIN instructor on instructor.id = course.instructor_id 
             WHERE
             student_enroll_course.student_id = 1
             GROUP BY\s

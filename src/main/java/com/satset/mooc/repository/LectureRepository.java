@@ -11,6 +11,6 @@ import java.util.Map;
 @Repository
 public interface LectureRepository extends JpaRepository<Lecture, Long> {
 
-    @Query(nativeQuery = true, value = "select * from lecture join student_lecture on lecture.id = student_lecture.lecture_id where student_id = ?1 ")
+    @Query(nativeQuery = true, value = "select * from lecture join student_lecture_status on lecture.id = student_lecture_status.lecture_id where student_id = ?1 ")
     List<Map<String, Object>> findAllCompletedLecture(long student_id);
 }
