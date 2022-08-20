@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-@PreAuthorize("hasAuthority('admin')")
 @RequestMapping("/api")
 @RestController
 public class AdminController {
@@ -41,6 +40,7 @@ public class AdminController {
         return ResponseEntity.ok().headers(responseHeaders).build();
     }
 
+    @PreAuthorize("hasAuthority('admin')")
     @PostMapping("/verify-instructor")
     public ResponseEntity<String> verifyInstructor(@RequestBody Map<String, Object> request) {
         Instructor instructor = instructorService.getInstructorById(Long.valueOf((Integer)request.get("user_id")));
@@ -53,6 +53,7 @@ public class AdminController {
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
+    @PreAuthorize("hasAuthority('admin')")
     @PostMapping("/verify-course")
     public ResponseEntity<String> verifyCourse(@RequestBody Map<String, Object> request) {
         Long course_id = Long.valueOf((Integer)request.get("course_id"));
@@ -67,6 +68,7 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
+    @PreAuthorize("hasAuthority('admin')")
     @GetMapping("/admin-dashboard")
     public ResponseEntity<HashMap<String, Object>> getDashboard() {
         HashMap<String, Object> outerMap = new HashMap<>();
@@ -85,6 +87,7 @@ public class AdminController {
         return new ResponseEntity<>(outerMap, HttpStatus.ACCEPTED);
     }
 
+    @PreAuthorize("hasAuthority('admin')")
     @GetMapping("/proposal-instructors/{page}")
     public ResponseEntity<HashMap<String, Object>> getInstructorProposal(@PathVariable("page") int page) {
         HashMap<String, Object> map = new HashMap<>();
@@ -104,6 +107,7 @@ public class AdminController {
         return ResponseEntity.ok(map);
     }
 
+    @PreAuthorize("hasAuthority('admin')")
     @GetMapping("/proposal-courses/{page}")
     public ResponseEntity<HashMap<String, Object>> getCourseProposal(@PathVariable("page") int page) {
         HashMap<String, Object> map = new HashMap<>();
