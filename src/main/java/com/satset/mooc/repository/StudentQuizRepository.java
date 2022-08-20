@@ -19,6 +19,6 @@ public interface StudentQuizRepository extends JpaRepository<StudentQuiz, Studen
     @Query(value = "SELECT * from student_quiz where student_id = ?1 AND quiz_id = ?2", nativeQuery = true)
     Optional<StudentQuiz> findByStudent_idAndQuiz_id(long student_id, long quiz_id);
 
-    @Query(nativeQuery = true, value = "SELECT * from student_quiz join quiz on quiz.id = student_quiz.quiz_id where score != -1 AND student_id = ?1")
+    @Query(nativeQuery = true, value = "SELECT * from student_quiz where AND student_id = ?1")
     List<Map<String, Object>> findAllCompletedQuiz(long student_id);
 }
