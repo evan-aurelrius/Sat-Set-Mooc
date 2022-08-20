@@ -28,10 +28,14 @@ public class InstructorServiceImpl implements InstructorService{
     @Autowired
     MailService mailService;
 
+    private static final String VERIFICATION = "Instructor Verification";
+    private static final String APPROVED = "Approved";
+    private static final String REJECTED = "Rejected";
+
     @Override
     public Instructor registerInstructor(String name, String gender, String image, String email, String password) {
         dailyNewUserService.setDailyNewUser(false, true);
-        mailService.sendMailToAllAdmin("Instructor Verification", "Hello, \n\nNew Instructor with the name "+name+" waiting for verification \n\nThanks.");
+        mailService.sendMailToAllAdmin(VERIFICATION, "Hello, \n\nNew Instructor with the name "+name+" waiting for verification \n\nThanks.");
         Logger logger = LoggerFactory.getLogger(CourseServiceImpl.class);
         logger.warn("Done");
         return instructorRepository.save(new Instructor(name, gender, image, email, password));
@@ -54,17 +58,17 @@ public class InstructorServiceImpl implements InstructorService{
 
     @Override
     public Boolean setInstructorStatus(Instructor instructor, String status) {
-        if(!instructor.getVerified_status().equalsIgnoreCase("Approved")) {
-            if(status.equalsIgnoreCase("Rejected")) {
+        if(!instructor.getVerified_status().equalsIgnoreCase(APPROVED)) {
+            if(status.equalsIgnoreCase(REJECTED)) {
                 dailyNewUserService.setDailyNewUser(false, false);
-                mailService.sendMail(instructor.getEmail(),"Instructor Verification", "Hello, \n\nSorry, your account registration was not approved by the admin \n\nThanks.");
+                mailService.sendMail(instructor.getEmail(), VERIFICATION, "Hello, \n\nSorry, your account registration was not approved by the admin \n\nThanks.");
                 delete(instructor);
                 return true;
             }
             instructor.setVerified_status(status);
             save(instructor);
             createDashboard(instructor);
-            mailService.sendMail(instructor.getEmail(),"Instructor Verification", "Hello, \n\nCongratulations, your account registration has been approved \n\nThanks.");
+            mailService.sendMail(instructor.getEmail(), VERIFICATION, "Hello, \n\nCongratulations, your account registration has been approved \n\nThanks.");
             return true;
         }
         return false;
@@ -92,12 +96,12 @@ public class InstructorServiceImpl implements InstructorService{
 
         if(courseOldStatus.equalsIgnoreCase("Pending"))
             instructorDashboard.setPending_course(instructorDashboard.getPending_course()-1);
-        else if(courseOldStatus.equalsIgnoreCase("Rejected"))
+        else if(courseOldStatus.equalsIgnoreCase(REJECTED))
             instructorDashboard.setRejected_course(instructorDashboard.getRejected_course()-1);
 
-        if(courseNewStatus.equalsIgnoreCase("Approved"))
+        if(courseNewStatus.equalsIgnoreCase(APPROVED))
             instructorDashboard.setVerified_course(instructorDashboard.getVerified_course()+1);
-        else if(courseNewStatus.equalsIgnoreCase("Rejected"))
+        else if(courseNewStatus.equalsIgnoreCase(REJECTED))
             instructorDashboard.setRejected_course(instructorDashboard.getRejected_course()+1);
     }
 
@@ -150,7 +154,7 @@ public class InstructorServiceImpl implements InstructorService{
 
     @Override
     public Boolean isValidated(Instructor instructor) {
-        return instructor.getVerified_status().equalsIgnoreCase("Approved");
+        return instructor.getVerified_status().equalsIgnoreCase(APPROVED);
     }
 
     @Override

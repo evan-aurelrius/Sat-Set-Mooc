@@ -5,7 +5,7 @@ import com.satset.mooc.model.InstructorDashboard;
 import com.satset.mooc.model.response.InstructorDashboardResponse;
 import com.satset.mooc.security.service.UserDetailsImpl;
 import com.satset.mooc.service.InstructorService;
-import com.satset.mooc.util.MapperUtil;
+import com.satset.mooc.util.ModelMapperInstance;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +26,7 @@ public class InstructorController {
     @Autowired
     InstructorService instructorService;
 
-    private final ModelMapper modelMapper = MapperUtil.getInstance();
+    private final ModelMapper modelMapper = ModelMapperInstance.getInstance();
 
     @GetMapping("/instructor-dashboard")
     public ResponseEntity<HashMap<String, Object>> getDashboard(Authentication authentication) {

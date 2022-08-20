@@ -1,8 +1,10 @@
 package com.satset.mooc.model.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class StudentDto {
     private long id;
     private String name;
@@ -13,5 +15,4 @@ public class StudentDto {
     private String createdAt;
     private String password;
 
-    public StudentDto() {}
 }

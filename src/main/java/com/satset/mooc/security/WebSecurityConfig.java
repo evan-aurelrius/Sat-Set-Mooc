@@ -2,7 +2,6 @@ package com.satset.mooc.security;
 
 import com.satset.mooc.security.jwt.AuthEntryPointJwt;
 import com.satset.mooc.security.jwt.AuthTokenFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -24,11 +23,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
-    @Autowired
-    private AuthEntryPointJwt unauthorizedHandler;
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http, AuthEntryPointJwt unauthorizedHandler) throws Exception {
         http.cors()
                 .and().csrf().disable().exceptionHandling()
                 .authenticationEntryPoint(unauthorizedHandler)

@@ -19,9 +19,7 @@ public class SatSetMoocApplication {
 
 	@Bean
 	public CommandLineRunner initializeSqlData() {
-		return args -> {
-			initializeSqlDataService.quickInitialize();
-		};
+		return args -> initializeSqlDataService.quickInitialize();
 	}
 
 }

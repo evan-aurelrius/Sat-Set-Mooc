@@ -1,7 +1,5 @@
 package com.satset.mooc.repository;
 
-import com.satset.mooc.model.Lecture;
-import com.satset.mooc.model.Quiz;
 import com.satset.mooc.model.StudentQuiz;
 import com.satset.mooc.model.StudentQuizKey;
 import org.springframework.data.jpa.repository.JpaRepository;

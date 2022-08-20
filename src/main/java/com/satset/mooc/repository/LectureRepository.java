@@ -1,6 +1,5 @@
 package com.satset.mooc.repository;
 
-import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Lecture;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -11,7 +11,7 @@ import com.satset.mooc.security.service.UserDetailsImpl;
 import com.satset.mooc.service.CourseService;
 import com.satset.mooc.service.InstructorService;
 import com.satset.mooc.service.StudentService;
-import com.satset.mooc.util.MapperUtil;
+import com.satset.mooc.util.ModelMapperInstance;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,14 +35,14 @@ public class CourseController {
     @Autowired
     StudentService studentService;
 
-    private final ModelMapper modelMapper= MapperUtil.getInstance();
+    private final ModelMapper modelMapper= ModelMapperInstance.getInstance();
 
     @GetMapping("/course/{course_id}")
     public ResponseEntity<Map<String, Object>> getCourseDetail(@PathVariable("course_id") long course_id, Authentication authentication) {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         long user_id = principal.getId();
 
-        Object user;
+        Object user = null;
 
         Course course = courseService.getCourseById(course_id);
         if(course==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -52,8 +52,6 @@ public class CourseController {
             if(Boolean.FALSE.equals(instructorService.isValidated((Instructor) user))) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } else if(principal.getRole().equals("student"))
             user = studentService.getStudentById(user_id);
-        else
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
         Boolean isEligibleStudent = null;
         if (user instanceof Student student) {
@@ -67,7 +65,6 @@ public class CourseController {
         map.put("is_enrolled", Boolean.TRUE.equals(isEligibleStudent));
         map.put("status", course.getStatus());
         map.put("data",courseDetailResponse);
-
 
         return ResponseEntity.ok(map);
     }
