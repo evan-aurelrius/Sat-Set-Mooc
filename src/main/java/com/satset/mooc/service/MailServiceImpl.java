@@ -1,7 +1,6 @@
 package com.satset.mooc.service;
 
 import com.satset.mooc.model.Admin;
-import com.satset.mooc.model.Instructor;
 import com.satset.mooc.repository.AdminRepository;
 import com.satset.mooc.repository.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;

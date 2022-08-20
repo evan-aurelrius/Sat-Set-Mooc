@@ -54,14 +54,12 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Boolean quizEligibilityCheck(Student student, Quiz quiz) {
-        if(Boolean.FALSE.equals(student.getEnrolledClass().contains(quiz.getCourse()))) return false;
-        return true;
+        return !Boolean.FALSE.equals(student.getEnrolledClass().contains(quiz.getCourse()));
     }
 
     @Override
     public Boolean lectureEligibilityCheck(Student student, Lecture lecture) {
-        if(Boolean.FALSE.equals(student.getEnrolledClass().contains(lecture.getCourse()))) return false;
-        return true;
+        return !Boolean.FALSE.equals(student.getEnrolledClass().contains(lecture.getCourse()));
     }
 
     @Override

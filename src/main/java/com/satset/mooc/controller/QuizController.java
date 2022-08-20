@@ -5,7 +5,7 @@ import com.satset.mooc.model.dto.QuestionDto;
 import com.satset.mooc.model.dto.QuizDto;
 import com.satset.mooc.security.service.UserDetailsImpl;
 import com.satset.mooc.service.*;
-import com.satset.mooc.util.MapperUtil;
+import com.satset.mooc.util.ModelMapperInstance;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,10 +36,10 @@ public class QuizController {
     @Autowired
     StudentQuizService studentQuizService;
 
-    private final ModelMapper modelMapper= MapperUtil.getInstance();
+    private final ModelMapper modelMapper= ModelMapperInstance.getInstance();
 
     @GetMapping("/quiz/{quiz_id}")
-    public ResponseEntity<?> viewQuiz(@PathVariable("quiz_id") long quiz_id, Authentication authentication) {
+    public ResponseEntity<HashMap<String, Object>> viewQuiz(@PathVariable("quiz_id") long quiz_id, Authentication authentication) {
         boolean isEligible;
         UserDetailsImpl userDetails = (UserDetailsImpl)authentication.getPrincipal();
         long user_id = userDetails.getId();
@@ -64,7 +64,7 @@ public class QuizController {
     }
 
     @PostMapping("/course/{course_id}/quiz")
-    public ResponseEntity<?> addQuiz(@PathVariable("course_id") long course_id, @RequestBody QuizDto quizDto, Authentication authentication) {
+    public ResponseEntity<HashMap<String, Long>> addQuiz(@PathVariable("course_id") long course_id, @RequestBody QuizDto quizDto, Authentication authentication) {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         long user_id = principal.getId();
         Instructor instructor = instructorService.getInstructorById(user_id);
@@ -110,7 +110,7 @@ public class QuizController {
     }
 
     @PostMapping("/quiz/{quiz_id}/question")
-    public ResponseEntity<?> addQuestion(@PathVariable("quiz_id") long quiz_id, @RequestBody QuestionDto questionDto, Authentication authentication) {
+    public ResponseEntity<HashMap<String, Long>> addQuestion(@PathVariable("quiz_id") long quiz_id, @RequestBody QuestionDto questionDto, Authentication authentication) {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         long user_id = principal.getId();
         Instructor instructor = instructorService.getInstructorById(user_id);
@@ -156,7 +156,7 @@ public class QuizController {
     }
 
     @PostMapping("/quiz/{quiz_id}")
-    public ResponseEntity<?> submitQuiz(@PathVariable("quiz_id") long quiz_id, @RequestBody Map<String, Object> request, Authentication authentication) {
+    public ResponseEntity<HashMap<String, Object>> submitQuiz(@PathVariable("quiz_id") long quiz_id, @RequestBody Map<String, Object> request, Authentication authentication) {
         Quiz quiz = quizService.getQuizById(quiz_id);
         if(quiz==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 

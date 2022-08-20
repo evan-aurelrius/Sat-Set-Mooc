@@ -1,7 +1,6 @@
 package com.satset.mooc.service;
 
 import com.satset.mooc.model.Lecture;
-import com.satset.mooc.model.Quiz;
 import com.satset.mooc.model.Student;
 import com.satset.mooc.model.StudentLecture;
 

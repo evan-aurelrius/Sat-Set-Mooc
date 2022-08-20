@@ -33,11 +33,13 @@ public class UserController {
     @Autowired
     UserUtil userUtil;
 
+    static final String INSTRUCTOR = "instructor";
+
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest request){
+    public ResponseEntity<HashMap<String, Object>> authenticateUser(@RequestBody LoginRequest request){
         HashMap<String, Object> map = new HashMap<>();
         var userData = userUtil.getJwt(request);
-        if (userData.getRole().equalsIgnoreCase("instructor")){
+        if (userData.getRole().equalsIgnoreCase(INSTRUCTOR)){
             Instructor instructor = instructorService.getInstructorById(userData.getId());
             if(Boolean.FALSE.equals(instructorService.isValidated(instructor))) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -51,8 +53,8 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody SignupRequest request){
-//        Register
+    public ResponseEntity<HashMap<String, Object>> register(@RequestBody SignupRequest request){
+
         Boolean studentExist = studentService.studentExist(request.getEmail());
         Boolean instructorExist = instructorService.instructorExist(request.getEmail());
         if(studentExist || instructorExist) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -69,7 +71,7 @@ public class UserController {
             responseHeaders.set("token", userData.getToken());
 
             return ResponseEntity.ok().headers(responseHeaders).body(map);
-        }else if (request.getRole().equals("instructor")){
+        }else if (request.getRole().equals(INSTRUCTOR)){
             Instructor instructor = instructorService.registerInstructor(request.getName(), request.getGender(), request.getImage(), request.getEmail(), passwordEncoder.encode(request.getPassword()));
 
             HashMap<String, Object> data = new HashMap<>();
@@ -78,7 +80,7 @@ public class UserController {
             data.put("gender", instructor.getGender());
             data.put("image", instructor.getImage());
             data.put("email", instructor.getEmail());
-            data.put("role", "instructor");
+            data.put("role", INSTRUCTOR);
             data.put("created_at", instructor.getCreated_at());
 
             HashMap<String, Object> map = new HashMap<>();

@@ -3,7 +3,6 @@ package com.satset.mooc.controller;
 import com.satset.mooc.model.Course;
 import com.satset.mooc.model.Lecture;
 import com.satset.mooc.model.Student;
-import com.satset.mooc.model.response.CourseResponse;
 import com.satset.mooc.model.response.StudentCourseResponse;
 import com.satset.mooc.model.response.StudentDashboardResponse;
 import com.satset.mooc.security.service.UserDetailsImpl;
@@ -13,8 +12,6 @@ import com.satset.mooc.service.StudentQuizService;
 import com.satset.mooc.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -54,7 +51,7 @@ public class StudentController {
     }
 
     @GetMapping("/enrolled-course/{page}")
-    public ResponseEntity<?> getEnrolledCourse(@PathVariable("page") int page, Authentication authentication) {
+    public ResponseEntity<HashMap<String, Object>> getEnrolledCourse(@PathVariable("page") int page, Authentication authentication) {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         if(page<1 || principal.getId()<1) return ResponseEntity.badRequest().build();
 
@@ -90,7 +87,7 @@ public class StudentController {
     }
 
     @GetMapping("/student-dashboard")
-    public ResponseEntity<?> studentDashboard(Authentication authentication) {
+    public ResponseEntity<HashMap<String, Object>> studentDashboard(Authentication authentication) {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         if(principal.getId()<1) return ResponseEntity.badRequest().build();
 
