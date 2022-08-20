@@ -91,10 +91,10 @@ public class DailyNewUserServiceImpl implements DailyNewUserService{
             if(Boolean.TRUE.equals(isStudent))
                 newLst.getLast().setNew_student(newLst.getLast().getNew_student()+1);
             else if(Boolean.TRUE.equals(isIncrement))
-                newLst.getLast().setNew_student(newLst.getLast().getNew_student()+1);
+                newLst.getLast().setNew_instructor(newLst.getLast().getNew_instructor()+1);
             else
-                newLst.getLast().setNew_student(newLst.getLast().getNew_student()+1);
-                saveAllChanges(newLst);
+                newLst.getLast().setNew_instructor(newLst.getLast().getNew_instructor()+1);
+            saveAllChanges(newLst);
         }
 
     }

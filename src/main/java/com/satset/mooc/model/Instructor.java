@@ -49,7 +49,6 @@ public class Instructor {
         this.email = email;
         this.password = password;
         this.created_at = new Timestamp(System.currentTimeMillis());
-//        this.token = token;
     }
 
     public long getId() {

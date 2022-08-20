@@ -3,8 +3,6 @@ package com.satset.mooc.service;
 import com.satset.mooc.model.*;
 import com.satset.mooc.model.response.*;
 import com.satset.mooc.repository.CourseRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,6 +34,8 @@ public class CourseServiceImpl implements CourseService{
     @Autowired
     StudentQuizService studentQuizService;
 
+    static final String APPROVED = "Approved";
+
     @Override
     public Iterable<Course> getCourse(Pageable pageable) {
         return courseRepository.findAll(pageable);
@@ -63,7 +63,7 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     public Boolean setCourseStatus(Course course, String status) {
-        if(Boolean.FALSE.equals(course.getStatus().equalsIgnoreCase("Approved"))) {
+        if(Boolean.FALSE.equals(course.getStatus().equalsIgnoreCase(APPROVED))) {
             instructorService.updateDashboard(course.getInstructor(), course.getStatus(), status);
             course.setStatus(status);
             courseRepository.save(course);
@@ -114,7 +114,7 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     public Page<Course> getAllCourseWithPagination(int page) {
-        return courseRepository.findAllByStatus("Approved",PageRequest.of(page-1,10));
+        return courseRepository.findAllByStatus(APPROVED,PageRequest.of(page-1,10));
     }
 
     @Override
@@ -197,7 +197,7 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     public Boolean isValidated(Course course) {
-        return course.getStatus().equalsIgnoreCase("Approved");
+        return course.getStatus().equalsIgnoreCase(APPROVED);
     }
 
     @Override
@@ -212,8 +212,8 @@ public class CourseServiceImpl implements CourseService{
 
     @Override
     public void fillCourseDetailResponseData(CourseDetailResponse courseDetailResponse, Object user) {
-        if(user instanceof Student) {
-            long user_id = ((Student)user).getId();
+        if(user instanceof Student student) {
+            long user_id = student.getId();
             setLectureStatus(courseDetailResponse.getLectures(), user_id);
             setQuizStatus(courseDetailResponse.getQuizzes(), user_id);
         }

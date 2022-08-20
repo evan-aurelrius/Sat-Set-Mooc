@@ -44,11 +44,6 @@ public class AdminServiceImpl implements AdminService{
     }
 
     @Override
-    public Admin getAdminById(long admin_id) {
-        return adminRepository.findById(admin_id).orElse(null);
-    }
-
-    @Override
     public List<AdminSummaryResponse> getSummary() {
         List<AdminSummaryResponse> lst = new ArrayList<>();
         lst.add(new AdminSummaryResponse("students", studentService.countAll()));

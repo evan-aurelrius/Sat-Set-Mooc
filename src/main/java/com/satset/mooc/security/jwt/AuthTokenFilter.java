@@ -24,7 +24,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
-    private final static Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
+    private static final Logger logged = LoggerFactory.getLogger(AuthTokenFilter.class);
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -43,7 +43,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            logger.error("Gagal: {}", e.getMessage());
+            logged.error("Gagal: {}", e.getMessage());
         }
 
         filterChain.doFilter(request, response);

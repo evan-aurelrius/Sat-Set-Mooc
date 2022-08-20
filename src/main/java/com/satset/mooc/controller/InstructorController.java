@@ -24,10 +24,10 @@ public class InstructorController {
     @Autowired
     InstructorService instructorService;
 
-    final private ModelMapper modelMapper = MapperUtil.getInstance();
+    private final ModelMapper modelMapper = MapperUtil.getInstance();
 
     @GetMapping("/instructor-dashboard")
-    public ResponseEntity<?> getDashboard(Authentication authentication) {
+    public ResponseEntity<HashMap<String, Object>> getDashboard(Authentication authentication) {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         long user_id = principal.getId();
 

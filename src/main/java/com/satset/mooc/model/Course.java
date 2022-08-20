@@ -1,6 +1,7 @@
 package com.satset.mooc.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -13,8 +14,8 @@ import java.util.Set;
 
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "course")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,17 +42,17 @@ public class Course {
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "student_enroll_course", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
     @JsonIgnore
-    private Set<Student> students = new LinkedHashSet<>();
+    private Set<Student> students;
 
     @OneToMany(mappedBy = "course")
-    private List<Lecture> lectures = new LinkedList<>();
+    private List<Lecture> lectures;
 
     @OneToMany(mappedBy = "course")
-    private List<Quiz> quizzes = new LinkedList<>();
+    private List<Quiz> quizzes;
 
     @ElementCollection
     @CollectionTable(name = "course_order", joinColumns = @JoinColumn(name = "course_id"))
-    private List<String> courseOrder = new LinkedList<>();
+    private List<String> courseOrder;
 
     public Course(String title, String image, Instructor instructor, Set<Student> students, List<Lecture> lectures, List<Quiz> quizzes, List<String> courseOrder) {
         this.title = title;
@@ -138,5 +139,25 @@ public class Course {
 
     public void setCourseOrder(List<String> courseOrder) {
         this.courseOrder = courseOrder;
+    }
+
+    public Timestamp getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(Timestamp updated_at) {
+        this.updated_at = updated_at;
+    }
+
+    public void setStudents(Set<Student> students) {
+        this.students = students;
+    }
+
+    public void setLectures(List<Lecture> lectures) {
+        this.lectures = lectures;
+    }
+
+    public void setQuizzes(List<Quiz> quizzes) {
+        this.quizzes = quizzes;
     }
 }

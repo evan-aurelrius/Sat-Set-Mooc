@@ -35,10 +35,10 @@ public class CourseController {
     @Autowired
     StudentService studentService;
 
-    final private ModelMapper modelMapper= MapperUtil.getInstance();
+    private final ModelMapper modelMapper= MapperUtil.getInstance();
 
     @GetMapping("/course/{course_id}")
-    public ResponseEntity<?> getCourseDetail(@PathVariable("course_id") long course_id, Authentication authentication) {
+    public ResponseEntity<Map<String, Object>> getCourseDetail(@PathVariable("course_id") long course_id, Authentication authentication) {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         long user_id = principal.getId();
 
@@ -56,17 +56,15 @@ public class CourseController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
         Boolean isEligibleStudent = null;
-        if (user instanceof Student) {
-            isEligibleStudent = courseService.enrolledCheck(course, (Student) user);
+        if (user instanceof Student student) {
+            isEligibleStudent = courseService.enrolledCheck(course, student);
         }
         HashMap<String, Object> map = new HashMap<>();
 
         CourseDetailResponse courseDetailResponse = modelMapper.map(course, CourseDetailResponse.class);
         courseService.fillCourseDetailResponseData(courseDetailResponse, user);
-        if(Boolean.TRUE.equals(isEligibleStudent))
-            map.put("is_enrolled", true);
-        else
-            map.put("is_enrolled", false);
+
+        map.put("is_enrolled", Boolean.TRUE.equals(isEligibleStudent));
         map.put("status", course.getStatus());
         map.put("data",courseDetailResponse);
 
@@ -76,7 +74,7 @@ public class CourseController {
 
 
         @GetMapping("/courses/{page}")
-    public ResponseEntity<?> getCourse(@PathVariable("page") int page) {
+    public ResponseEntity<HashMap<String, Object>> getCourse(@PathVariable("page") int page) {
         if(page<1) return ResponseEntity.badRequest().build();
 
         Page<Course> coursePage = courseService.getAllCourseWithPagination(page);
@@ -96,7 +94,7 @@ public class CourseController {
     }
 
     @PostMapping("/course")
-    public ResponseEntity<?> createCourse(@RequestBody CourseDto courseDto, Authentication authentication) {
+    public ResponseEntity<HashMap<String, Long>> createCourse(@RequestBody CourseDto courseDto, Authentication authentication) {
         Course course = modelMapper.map(courseDto, Course.class);
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         Instructor instructor = instructorService.getInstructorById(principal.getId());
@@ -111,7 +109,7 @@ public class CourseController {
     }
 
     @GetMapping("/mycourse/{page}")
-    public ResponseEntity<?> getMyCourse(@PathVariable("page") int page, Authentication authentication) {
+    public ResponseEntity<HashMap<String, Object>> getMyCourse(@PathVariable("page") int page, Authentication authentication) {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         long user_id = principal.getId();
         if(page<1 || user_id<1) return ResponseEntity.badRequest().build();
@@ -136,7 +134,7 @@ public class CourseController {
     }
 
     @PutMapping("/course-order/{course_id}")
-    public ResponseEntity<?> setCourseOrder(@PathVariable("course_id") long course_id, @RequestBody Map<String,List<String>> request, Authentication authentication) {
+    public ResponseEntity<HashMap<String, Object>> setCourseOrder(@PathVariable("course_id") long course_id, @RequestBody Map<String,List<String>> request, Authentication authentication) {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
         long user_id = principal.getId();
 
@@ -152,7 +150,7 @@ public class CourseController {
     }
 
     @GetMapping("/course-order/{course_id}")
-    public ResponseEntity<?> getCourseOrder(@PathVariable("course_id") long course_id) {
+    public ResponseEntity<HashMap<String, List<String>>> getCourseOrder(@PathVariable("course_id") long course_id) {
         Course course = courseService.getCourseById(course_id);
         if(course==null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 

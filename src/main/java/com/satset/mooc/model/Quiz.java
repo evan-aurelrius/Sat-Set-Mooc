@@ -57,4 +57,8 @@ public class Quiz {
     public void setCourse(Course course) {
         this.course = course;
     }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
 }

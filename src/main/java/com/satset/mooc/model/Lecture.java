@@ -66,4 +66,6 @@ public class Lecture {
         this.course = course;
     }
 
+
+
 }

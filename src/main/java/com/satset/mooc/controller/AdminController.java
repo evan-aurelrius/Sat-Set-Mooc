@@ -68,7 +68,7 @@ public class AdminController {
     }
 
     @GetMapping("/admin-dashboard")
-    public ResponseEntity<?> getDashboard() {
+    public ResponseEntity<HashMap<String, Object>> getDashboard() {
         HashMap<String, Object> outerMap = new HashMap<>();
         HashMap<String, Object> innerMap = new HashMap<>();
         outerMap.put("data",innerMap);
@@ -86,7 +86,7 @@ public class AdminController {
     }
 
     @GetMapping("/proposal-instructors/{page}")
-    public ResponseEntity<?> getInstructorProposal(@PathVariable("page") int page) {
+    public ResponseEntity<HashMap<String, Object>> getInstructorProposal(@PathVariable("page") int page) {
         HashMap<String, Object> map = new HashMap<>();
         Page<Instructor> instructorPage = instructorService.getInstructorProposalPage(page);
         List<InstructorProposalResponse> lst = instructorService.convertToList(instructorPage);
@@ -105,7 +105,7 @@ public class AdminController {
     }
 
     @GetMapping("/proposal-courses/{page}")
-    public ResponseEntity<?> getCourseProposal(@PathVariable("page") int page) {
+    public ResponseEntity<HashMap<String, Object>> getCourseProposal(@PathVariable("page") int page) {
         HashMap<String, Object> map = new HashMap<>();
         Page<Course> coursePage = courseService.getCourseProposalPage(page);
         List<CourseProposalResponse> lst = courseService.convertToListOfCourseProposalResponse(coursePage);
