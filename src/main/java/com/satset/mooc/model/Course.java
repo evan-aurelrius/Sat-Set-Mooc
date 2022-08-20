@@ -31,6 +31,9 @@ public class Course {
     @Column(name = "image")
     private String image;
 
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
+
     @Column(name = "timestamp")
     private Timestamp updated_at;
 
@@ -159,5 +162,13 @@ public class Course {
 
     public void setQuizzes(List<Quiz> quizzes) {
         this.quizzes = quizzes;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
