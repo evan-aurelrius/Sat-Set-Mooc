@@ -47,16 +47,16 @@ public class InitializeSqlDataServiceImpl implements InitializeSqlDataService{
     }
 
     private void initializeAdmin() {
-        Admin admin1 = new Admin("Administrator","admin1@localhost",passwordEncoder.encode("admin123"));
+        Admin admin1 = new Admin("Thoni","ahmad.fathoni50@gmail.com",passwordEncoder.encode("thoni123"));
         adminRepository.save(admin1);
     }
 
     private void initializeInstructor() {
-        Instructor instructor1 = new Instructor("Jack","m","profile1.jpeg","jacktheripper@gmail.com", passwordEncoder.encode("jack123"));
+        Instructor instructor1 = new Instructor("Hamdi","m","https://i.imgur.com/teA8hQ0.png","ilhamabdillah123@gmail.com", passwordEncoder.encode("hamdi123"));
         instructorRepository.save(instructor1);
     }
 
     private void initializeStudent() {
-        studentService.registerStudent("Timmy","m","profile2.jpg","timmyadventure@gmail.com",passwordEncoder.encode("timmy123"));
+        studentService.registerStudent("Student 1","m","https://i.imgur.com/teA8hQ0.png","student1@gmail.com",passwordEncoder.encode("student123"));
     }
 }
